@@ -1,6 +1,7 @@
-// Fixed error: Cannot find type definition file for 'vite/client'
-declare var process: {
-  env: {
+/// <reference types="vite/client" />
+
+declare namespace NodeJS {
+  interface ProcessEnv {
     API_KEY: string;
   }
-};
+}
