@@ -1,0 +1,3 @@
+module.exports=[29356,a=>{"use strict";var b=a.i(23031);function c({children:a}){return(0,b.jsx)(b.Fragment,{children:a})}a.s(["default",()=>c,"metadata",0,{title:"Цены на 3D печать в СПб",description:"Стоимость серийной 3D-печати и прототипирования. Прозрачное ценообразование и расчет стоимости проекта в течение 10 минут."}])}];
+
+//# sourceMappingURL=Desktop_ai_3d_new_src_app_pricing_layout_tsx_fea7d77a._.js.map

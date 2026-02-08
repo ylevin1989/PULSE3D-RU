@@ -1,0 +1,65 @@
+{
+  "node": {
+    "0083573bc9aa73a77e91ee57bbcfd92bfbc0557255": {
+      "workers": {
+        "app/page": {
+          "moduleId": 70741,
+          "async": false,
+          "exportedName": "getContent",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "getContent",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    },
+    "00a0e4122e1877d025fa70884eebba61b22c5fc725": {
+      "workers": {
+        "app/page": {
+          "moduleId": 70741,
+          "async": false,
+          "exportedName": "getLeads",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "getLeads",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    },
+    "402e59b20d3aa77668ebcd2625497eeaf35f9a9de9": {
+      "workers": {
+        "app/page": {
+          "moduleId": 70741,
+          "async": false,
+          "exportedName": "deleteLead",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "deleteLead",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    },
+    "40bfe516f7d35b113ddb800e67c3e04e225bb2da55": {
+      "workers": {
+        "app/page": {
+          "moduleId": 70741,
+          "async": false,
+          "exportedName": "saveContent",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      },
+      "exportedName": "saveContent",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    }
+  },
+  "edge": {}
+}

@@ -1,0 +1,3 @@
+module.exports=[52657,a=>{"use strict";var b=a.i(23031);function c({children:a}){return(0,b.jsx)(b.Fragment,{children:a})}a.s(["default",()=>c,"metadata",0,{title:"Контакты и адрес в Санкт-Петербурге",description:"Свяжитесь с PULSE 3D для заказа 3D-печати. Наш адрес в Санкт-Петербурге, телефон и форма обратной связи для расчета проекта."}])}];
+
+//# sourceMappingURL=Desktop_ai_3d_new_src_app_contacts_layout_tsx_028b0ef2._.js.map

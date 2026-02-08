@@ -1,0 +1,347 @@
+.container {
+    padding: 60px 60px 120px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.intro {
+    margin-bottom: 80px;
+}
+
+.introText {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    max-width: 800px;
+    font-weight: 500;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.projectCard {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.projectCard:hover {
+    transform: translateY(-10px);
+    border-color: var(--color-brand-primary);
+    box-shadow: 0 40px 80px rgba(15, 23, 42, 0.1);
+}
+
+.imageWrapper {
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.projectCard:hover .image {
+    transform: scale(1.05);
+}
+
+.content {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.materialTag {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+    display: block;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--color-brand-primary);
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.desc {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.statsGrid {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.statLabel {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+}
+
+.statValue {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-brand-primary);
+}
+
+.footer {
+    padding-top: 24px;
+    border-top: 1px dashed var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-brand-primary);
+}
+
+.footer::after {
+    content: '→';
+    transition: transform 0.3s ease;
+}
+
+.projectCard:hover .footer::after {
+    transform: translateX(10px);
+}
+
+/* Detail Case Page Styles */
+.detailHeader {
+    margin-bottom: 60px;
+}
+
+.backLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+    transition: color 0.3s;
+}
+
+.backLink:hover {
+    color: var(--color-brand-primary);
+}
+
+.titleWrapper {
+    position: relative;
+    padding-bottom: 24px;
+}
+
+.detailTitle {
+    font-size: clamp(32px, 7vw, 72px);
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: -2.5px;
+    color: var(--color-brand-primary);
+    line-height: 0.9;
+}
+
+.titleLine {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 4px;
+    background: var(--color-brand-primary);
+}
+
+.detailGrid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 80px;
+}
+
+.mainImageWrapper {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: 1px solid var(--color-border);
+    margin-bottom: 60px;
+    overflow: hidden;
+}
+
+.detailImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.storySection {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.storyTitle {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+}
+
+.storyDesc {
+    font-size: 24px;
+    line-height: 1.5;
+    color: var(--color-text-main);
+    font-weight: 500;
+}
+
+.structuredDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.detailCard {
+    padding: 32px;
+    background: var(--color-surface);
+    border-left: 4px solid var(--color-border);
+}
+
+.card_primary {
+    border-color: #3b82f6;
+}
+
+.card_accent {
+    border-color: #f59e0b;
+}
+
+.card_success {
+    border-color: #10b981;
+}
+
+.detailLabel {
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.detailText {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-text-main);
+}
+
+.specsBox {
+    background: var(--color-brand-primary);
+    color: #fff;
+    padding: 48px;
+    position: sticky;
+    top: 120px;
+}
+
+.specsTitle {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    margin-bottom: 40px;
+    opacity: 0.5;
+}
+
+.specItem {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.specLabel {
+    font-size: 10px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.specValue {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ctaWrapper {
+    margin-top: 48px;
+}
+
+.guaranteeBox {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.guaranteeItem {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.guaranteeItem svg {
+    width: 20px;
+    height: 20px;
+    opacity: 0.3;
+}
+
+@media (max-width: 1100px) {
+    .detailGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .detailTitle {
+        font-size: 48px;
+    }
+
+    .specsBox {
+        position: static;
+    }
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .title {
+        font-size: 28px;
+    }
+}

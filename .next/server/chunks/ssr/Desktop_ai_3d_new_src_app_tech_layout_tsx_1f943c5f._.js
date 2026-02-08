@@ -1,0 +1,3 @@
+module.exports=[63143,a=>{"use strict";var b=a.i(23031);function c({children:a}){return(0,b.jsx)(b.Fragment,{children:a})}a.s(["default",()=>c,"metadata",0,{title:"Оборудование и парк 3D-принтеров",description:"Наш парк оборудования для промышленной 3D-печати. Современные скоростные 3D-принтеры Bambu Lab для серийного производства деталей."}])}];
+
+//# sourceMappingURL=Desktop_ai_3d_new_src_app_tech_layout_tsx_1f943c5f._.js.map

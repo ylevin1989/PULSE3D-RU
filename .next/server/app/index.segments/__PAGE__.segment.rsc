@@ -1,0 +1,8 @@
+1:"$Sreact.fragment"
+2:I[59171,["/_next/static/chunks/c0134e6e2ff90b6d.js","/_next/static/chunks/296313461e44cfc0.js"],"default"]
+3:I[36639,["/_next/static/chunks/c0134e6e2ff90b6d.js","/_next/static/chunks/296313461e44cfc0.js"],"default"]
+4:I[9774,["/_next/static/chunks/c7a25a3b0173d7f2.js","/_next/static/chunks/40cd63608a5141c2.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+:HL["/_next/static/chunks/9ec9ea1f212a540f.css","style"]
+0:{"buildId":"xlH_98GMgMEKnpJlTvlCb","rsc":["$","$1","c",{"children":[[["$","$L2",null,{"data":{"@context":"https://schema.org","@type":"LocalBusiness","name":"PULSE 3D","image":"https://pulse3d.ru/og-image.png","@id":"https://pulse3d.ru","url":"https://pulse3d.ru","telephone":"+7 (911) 910-40-12","address":{"@type":"PostalAddress","streetAddress":"18-я линия В.О., д. 3В","addressLocality":"Санкт-Петербург","postalCode":"199178","addressCountry":"RU"},"geo":{"@type":"GeoCoordinates","latitude":59.9324,"longitude":30.2711},"openingHoursSpecification":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"10:00","closes":"20:00"},"sameAs":["https://www.youtube.com/@Pulse3D_SPB","https://t.me/YLeevin","https://wa.me/79119104012"]}}],["$","$L3",null,{}]],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/9ec9ea1f212a540f.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/296313461e44cfc0.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"loading":null,"isPartial":false}
+6:null

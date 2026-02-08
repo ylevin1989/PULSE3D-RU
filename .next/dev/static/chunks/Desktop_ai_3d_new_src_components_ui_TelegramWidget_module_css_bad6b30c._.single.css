@@ -1,0 +1,58 @@
+/* [project]/Desktop/ai/3d_new/src/components/ui/TelegramWidget.module.css [app-client] (css) */
+.TelegramWidget-module__276Tcq__widget {
+  background: var(--color-brand-primary);
+  z-index: 999;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  text-decoration: none;
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+  display: flex;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  box-shadow: 0 4px 15px #0f172a66;
+}
+
+.TelegramWidget-module__276Tcq__widget:hover {
+  background: var(--color-brand-primary-dark);
+  transform: scale(1.1)translateY(-5px);
+  box-shadow: 0 8px 25px #0f172a99;
+}
+
+.TelegramWidget-module__276Tcq__widget:hover .TelegramWidget-module__276Tcq__tooltip {
+  opacity: 1;
+  transform: translateX(-108%);
+}
+
+.TelegramWidget-module__276Tcq__tooltip {
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  background: #0f172ae6;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all .3s;
+  position: absolute;
+  right: 0;
+  transform: translateX(-100%);
+  box-shadow: 0 4px 12px #0000001a;
+}
+
+@media (max-width: 768px) {
+  .TelegramWidget-module__276Tcq__widget {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/*# sourceMappingURL=Desktop_ai_3d_new_src_components_ui_TelegramWidget_module_css_bad6b30c._.single.css.map*/

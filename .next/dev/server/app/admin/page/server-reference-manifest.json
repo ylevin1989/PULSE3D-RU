@@ -1,0 +1,35 @@
+{
+  "node": {
+    "0081b885406967cd86a934088ba00227629c5e56ca": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/Desktop/ai/3d_new/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/ai/3d_new/src/app/admin/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "getContent",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/page": "action-browser"
+      },
+      "exportedName": "getContent",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    },
+    "4085cb6ffbc57a39136746c2fca1610bd2499f6f01": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/Desktop/ai/3d_new/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/Desktop/ai/3d_new/src/app/admin/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "saveContent",
+          "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+        }
+      },
+      "layer": {
+        "app/admin/page": "action-browser"
+      },
+      "exportedName": "saveContent",
+      "filename": "Desktop/ai/3d_new/src/app/admin/actions.ts"
+    }
+  },
+  "edge": {}
+}

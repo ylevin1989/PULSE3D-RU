@@ -1,0 +1,18 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/page": "/admin",
+  "/api/contact/route": "/api/contact",
+  "/api/login/check/route": "/api/login/check",
+  "/api/login/route": "/api/login",
+  "/api/upload/route": "/api/upload",
+  "/contacts/page": "/contacts",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/portfolio/[slug]/page": "/portfolio/[slug]",
+  "/portfolio/page": "/portfolio",
+  "/pricing/page": "/pricing",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/tech/page": "/tech"
+}

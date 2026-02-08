@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
+      - NODE_ENV=production
+    depends_on:
+      - db
+    restart: always
+    volumes:
+      - ./public:/app/public
+      - ./src/data:/app/src/data
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: pulse_user
+      POSTGRES_PASSWORD: pulse_password
+      POSTGRES_DB: pulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:

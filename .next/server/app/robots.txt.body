@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://pulse3d.ru/sitemap.xml
