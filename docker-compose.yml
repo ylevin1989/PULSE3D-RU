@@ -4,26 +4,24 @@ services:
   app:
     build: .
     container_name: pulse3d-app
+    restart: always
     environment:
       - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
       - NODE_ENV=production
     depends_on:
       - db
-    restart: always
     volumes:
       - ./public:/app/public
       - ./src/data:/app/src/data
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pulse3d-router.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
-      - "traefik.http.routers.pulse3d-router.entrypoints=websecure"
-      - "traefik.http.routers.pulse3d-router.tls=true"
-      - "traefik.http.routers.pulse3d-router.tls.certresolver=mytlschallenge"
-      - "traefik.http.services.pulse3d-service.loadbalancer.server.port=3000"
+      - "traefik.enable=true" # Важнейшая метка
+      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      - "traefik.http.routers.pulse3d.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
       - "traefik.docker.network=n8n_default"
     networks:
-      - n8n_network
-      - internal
+      - n8n_default
 
   db:
     image: postgres:15-alpine
@@ -37,14 +35,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - internal
+      - n8n_default
 
 networks:
-  n8n_network:
+  n8n_default:
     external: true
-    name: n8n_default
-  internal:
-
 
 volumes:
   postgres_data:
