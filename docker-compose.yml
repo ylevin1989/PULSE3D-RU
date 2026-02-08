@@ -14,13 +14,14 @@ services:
       - ./src/data:/app/src/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
-      - "traefik.http.routers.pulse3d.entrypoints=websecure"
-      - "traefik.http.routers.pulse3d.tls.certresolver=myresolver" # Убедитесь, что имя резолвера совпадает с тем, что в конфиге Traefik
-      - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
+      # Укажите ваш настоящий домен вместо pulse3d.ru если он другой
+      - "traefik.http.routers.pulse-app.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      - "traefik.http.routers.pulse-app.entrypoints=websecure"
+      - "traefik.http.routers.pulse-app.tls.certresolver=myresolver"
+      - "traefik.http.services.pulse-app.loadbalancer.server.port=3000"
     networks:
       - default
-      - n8n_network # Имя сети, в которой работает traefik-1
+      - n8n_network
 
   db:
     image: postgres:15-alpine
@@ -39,6 +40,7 @@ networks:
   default:
   n8n_network:
     external: true
+    name: n8n_default # Используем именно это имя из вашего списка
 
 volumes:
   postgres_data:
