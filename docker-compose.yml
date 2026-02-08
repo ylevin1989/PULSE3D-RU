@@ -16,8 +16,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pulse-app.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
       - "traefik.http.routers.pulse-app.entrypoints=websecure"
-      - "traefik.http.routers.pulse-app.tls.certresolver=mytlschallenge" # ИСПРАВЛЕНО
+      - "traefik.http.routers.pulse-app.tls.certresolver=mytlschallenge"
       - "traefik.http.services.pulse-app.loadbalancer.server.port=3000"
+      - "traefik.docker.network=n8n_default" # ДОБАВЛЕНО: Явное указание сети для Traefik
     networks:
       - default
       - n8n_network
