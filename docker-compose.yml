@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: pulse3d-app
+    container_name: pulse3d-app # ФИКСИРОВАННОЕ ИМЯ
     restart: always
     environment:
       - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
@@ -14,9 +14,10 @@ services:
       - ./public:/app/public
       - ./src/data:/app/src/data
     labels:
-      - "traefik.enable=true" # Важнейшая метка
+      - "traefik.enable=true"
       - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
       - "traefik.http.routers.pulse3d.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d.tls=true"
       - "traefik.http.routers.pulse3d.tls.certresolver=mytlschallenge"
       - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
       - "traefik.docker.network=n8n_default"
@@ -25,7 +26,7 @@ services:
 
   db:
     image: postgres:15-alpine
-    container_name: pulse3d-db
+    container_name: pulse3d-db # ФИКСИРОВАННОЕ ИМЯ
     restart: always
     environment:
       POSTGRES_USER: pulse_user
