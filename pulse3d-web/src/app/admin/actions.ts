@@ -16,8 +16,8 @@ export async function saveContent(newData: any) {
 
 export async function getLeads() {
     try {
-        const [rows] = await pool.execute('SELECT * FROM leads ORDER BY created_at DESC');
-        return rows as any[];
+        const result = await pool.query('SELECT * FROM leads ORDER BY created_at DESC');
+        return result.rows;
     } catch (error) {
         console.error('Error fetching leads:', error);
         return [];
@@ -26,7 +26,7 @@ export async function getLeads() {
 
 export async function deleteLead(id: number) {
     try {
-        await pool.execute('DELETE FROM leads WHERE id = ?', [id]);
+        await pool.query('DELETE FROM leads WHERE id = $1', [id]);
         return { success: true };
     } catch (error) {
         console.error('Error deleting lead:', error);
