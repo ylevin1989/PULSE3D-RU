@@ -1,0 +1,815 @@
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap";
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/app/globals.css [app-client] (css) */
+:root {
+  --color-bg: #fdfbfa;
+  --color-surface: #f5f1e8;
+  --color-brand-primary: #0f172a;
+  --color-brand-primary-dark: #020617;
+  --color-brand-accent: #e2d9c8;
+  --color-text-main: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  --color-border: #0f172a1f;
+  --font-main: "Inter", sans-serif;
+  --font-mono: "Roboto Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  font-family: var(--font-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+.bg-grid {
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(to right, #0f172a05 1px, #0000 1px);
+  background-size: 80px 100%;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.primary-button {
+  height: 52px;
+  font-family: var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .3s cubic-bezier(.16, 1, .3, 1);
+  display: inline-flex;
+}
+
+.primary-button--filled {
+  background: var(--color-brand-primary);
+  color: #fff;
+}
+
+.primary-button--filled:hover {
+  background: var(--color-brand-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px #0f172a26;
+}
+
+.primary-button--outline {
+  color: var(--color-brand-primary);
+  border: 1.5px solid var(--color-brand-primary);
+  background: none;
+}
+
+.primary-button--outline:hover {
+  background: var(--color-brand-primary);
+  color: #fff;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 #0f172a33;
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px #0f172a00;
+  }
+
+  100% {
+    box-shadow: 0 0 #0f172a00;
+  }
+}
+
+.pulsate {
+  animation: 2s infinite pulse;
+}
+
+.glass-card {
+  border: 1px solid var(--color-border);
+  background: #fff;
+  border-radius: 4px;
+  transition: all .4s;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px #0f172a14;
+}
+
+.section-title {
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  margin-bottom: clamp(30px, 8vw, 60px);
+  font-size: clamp(32px, 8vw, 64px);
+  font-weight: 500;
+}
+
+.green-text {
+  color: var(--color-brand-primary);
+}
+
+.admin-root-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  color: #1e293b !important;
+  background: #f1f5f9 !important;
+}
+
+.admin-root-wrapper main {
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/components/layout/Navbar.module.css [app-client] (css) */
+.Navbar-module__HP4Bzq__navbar {
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid #0f172a14;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 90px;
+  padding: 0 60px;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Navbar-module__HP4Bzq__logo {
+  flex: 0 0 300px;
+  align-items: center;
+  height: 100%;
+  margin-right: 40px;
+  text-decoration: none;
+  display: flex;
+  position: relative;
+}
+
+.Navbar-module__HP4Bzq__logoImage {
+  -o-object-fit: contain;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: contrast(1.8) brightness(1.3);
+  width: auto;
+  height: 60px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.Navbar-module__HP4Bzq__navLinks {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__navLink {
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all .3s;
+  position: relative;
+}
+
+.Navbar-module__HP4Bzq__navLink:hover {
+  color: var(--color-brand-primary);
+}
+
+.Navbar-module__HP4Bzq__navLink:after {
+  content: "";
+  background: var(--color-brand-primary);
+  transform-origin: 100%;
+  width: 100%;
+  height: 2px;
+  transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+}
+
+.Navbar-module__HP4Bzq__navLink:hover:after, .Navbar-module__HP4Bzq__active:after {
+  transform-origin: 0;
+  transform: scaleX(1);
+}
+
+.Navbar-module__HP4Bzq__active {
+  color: var(--color-brand-primary) !important;
+}
+
+.Navbar-module__HP4Bzq__navRight {
+  flex: none;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 32px;
+  margin-left: 40px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__headerPhone {
+  font-family: var(--font-mono);
+  align-items: center;
+  gap: 12px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__phoneLink {
+  color: var(--color-brand-primary);
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.Navbar-module__HP4Bzq__separator {
+  color: var(--color-border);
+  opacity: .5;
+}
+
+.Navbar-module__HP4Bzq__cityLink {
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 1280px) {
+  .Navbar-module__HP4Bzq__navbar {
+    padding: 0 40px;
+  }
+
+  .Navbar-module__HP4Bzq__navLinks {
+    gap: 24px;
+  }
+
+  .Navbar-module__HP4Bzq__logo {
+    flex: 0 0 200px;
+  }
+}
+
+.Navbar-module__HP4Bzq__burger {
+  color: var(--color-brand-primary);
+  cursor: pointer;
+  z-index: 2001;
+  background: none;
+  border: none;
+  padding: 8px;
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .Navbar-module__HP4Bzq__navLinks, .Navbar-module__HP4Bzq__navRight {
+    display: none;
+  }
+
+  .Navbar-module__HP4Bzq__burger {
+    display: block;
+  }
+
+  .Navbar-module__HP4Bzq__navbar {
+    height: 70px;
+    padding: 0 20px;
+  }
+
+  .Navbar-module__HP4Bzq__logo {
+    flex: 0 0 180px;
+  }
+
+  .Navbar-module__HP4Bzq__logoImage {
+    height: 80px;
+  }
+}
+
+.Navbar-module__HP4Bzq__mobileOverlay {
+  z-index: 2000;
+  background: #fff;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  padding: 100px 20px 40px;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateX(100%);
+}
+
+.Navbar-module__HP4Bzq__mobileOverlayOpen {
+  transform: translateX(0);
+}
+
+.Navbar-module__HP4Bzq__mobileContent {
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__mobileLinks {
+  flex-direction: column;
+  gap: 32px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__mobileLink {
+  color: var(--color-text-main);
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  font-size: 32px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.Navbar-module__HP4Bzq__mobileActive {
+  color: var(--color-brand-primary);
+}
+
+.Navbar-module__HP4Bzq__mobileFooter {
+  border-top: 1px solid var(--color-border);
+  flex-direction: column;
+  gap: 24px;
+  margin-top: auto;
+  padding-top: 40px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__mobileContactItem {
+  color: var(--color-text-secondary);
+  align-items: center;
+  gap: 16px;
+  display: flex;
+}
+
+.Navbar-module__HP4Bzq__mobileContactItem a {
+  color: var(--color-brand-primary);
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.Navbar-module__HP4Bzq__contactIcon {
+  color: var(--color-brand-primary);
+  opacity: .5;
+}
+
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/components/layout/Footer.module.css [app-client] (css) */
+.Footer-module__AkpfcG__footer {
+  background: var(--color-brand-primary);
+  color: var(--color-bg);
+  padding: 100px 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.Footer-module__AkpfcG__footer:before {
+  content: "";
+  pointer-events: none;
+  background-image: linear-gradient(#ffffff08 1px, #0000 1px), linear-gradient(90deg, #ffffff08 1px, #0000 1px);
+  background-size: 100px 100px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Footer-module__AkpfcG__footerMain {
+  z-index: 1;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 120px;
+  max-width: 1400px;
+  margin-bottom: 80px;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  position: relative;
+}
+
+.Footer-module__AkpfcG__brandCol {
+  flex-direction: column;
+  gap: 40px;
+  display: flex;
+}
+
+.Footer-module__AkpfcG__logo {
+  background-color: #0f172a;
+  align-items: center;
+  width: fit-content;
+  display: flex;
+}
+
+.Footer-module__AkpfcG__logoImage {
+  filter: invert() brightness(1.2) contrast(3);
+  mix-blend-mode: screen;
+  opacity: 1;
+  width: auto;
+  height: 120px;
+}
+
+.Footer-module__AkpfcG__tagline {
+  color: #ffffff80;
+  max-width: 380px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.Footer-module__AkpfcG__socials {
+  gap: 12px;
+  display: flex;
+}
+
+.Footer-module__AkpfcG__socialIcon {
+  color: #fff;
+  background: #ffffff0d;
+  border: 1px solid #ffffff1a;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  transition: all .4s cubic-bezier(.2, 1, .3, 1);
+  display: flex;
+}
+
+.Footer-module__AkpfcG__socialIcon:hover {
+  color: var(--color-brand-primary);
+  background: #fff;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px #0003;
+}
+
+.Footer-module__AkpfcG__colTitle {
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  font-size: 11px;
+  font-weight: 900;
+  display: flex;
+}
+
+.Footer-module__AkpfcG__colTitle:after {
+  content: "";
+  background: #ffffff1a;
+  flex: 1;
+  height: 1px;
+}
+
+.Footer-module__AkpfcG__linksCol, .Footer-module__AkpfcG__contactsCol {
+  flex-direction: column;
+  gap: 16px;
+  display: flex;
+}
+
+.Footer-module__AkpfcG__linksCol a, .Footer-module__AkpfcG__contactLink {
+  width: fit-content;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all .3s;
+  color: #fff9 !important;
+  text-decoration: none !important;
+}
+
+.Footer-module__AkpfcG__linksCol a:hover, .Footer-module__AkpfcG__contactLink:hover {
+  transform: translateX(5px);
+  color: #fff !important;
+}
+
+.Footer-module__AkpfcG__footerBottom {
+  color: #ffffff4d;
+  z-index: 1;
+  border-top: 1px solid #ffffff14;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
+  font-size: 12px;
+  display: flex;
+  position: relative;
+}
+
+.Footer-module__AkpfcG__agencyLink {
+  text-underline-offset: 4px;
+  transition: all .3s;
+  color: #fff !important;
+  font-weight: 700 !important;
+  -webkit-text-decoration: underline #ffffff4d !important;
+  text-decoration: underline #ffffff4d !important;
+}
+
+.Footer-module__AkpfcG__agencyLink:hover {
+  color: var(--color-brand-accent) !important;
+  -webkit-text-decoration-color: var(--color-brand-accent) !important;
+  text-decoration-color: var(--color-brand-accent) !important;
+}
+
+@media (max-width: 1024px) {
+  .Footer-module__AkpfcG__footer {
+    padding: 60px 20px 40px;
+  }
+
+  .Footer-module__AkpfcG__footerMain {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .Footer-module__AkpfcG__footerBottom {
+    text-align: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .Footer-module__AkpfcG__tagline {
+    max-width: 100%;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Footer-module__AkpfcG__logoImage {
+    height: 80px;
+  }
+}
+
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/components/ui/Modal.module.css [app-client] (css) */
+.Modal-module__67uUda__overlay {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  background: #000000d9;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  animation: .3s Modal-module__67uUda__fadeIn;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Modal-module__67uUda__modal {
+  background: #fff;
+  border-radius: 0;
+  width: 90%;
+  max-width: 600px;
+  padding: 60px;
+  animation: .4s cubic-bezier(.16, 1, .3, 1) Modal-module__67uUda__slideUp;
+  position: relative;
+  box-shadow: 0 25px 50px -12px #00000080;
+}
+
+.Modal-module__67uUda__closeBtn {
+  cursor: pointer;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 8px;
+  transition: color .3s;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+.Modal-module__67uUda__closeBtn:hover {
+  color: var(--color-brand-primary);
+}
+
+.Modal-module__67uUda__content {
+  width: 100%;
+}
+
+@keyframes Modal-module__67uUda__fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes Modal-module__67uUda__slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .Modal-module__67uUda__modal {
+    padding: 40px 24px;
+  }
+}
+
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/components/modals/ContactModal.module.css [app-client] (css) */
+.ContactModal-module__MPB8Mq__container {
+  flex-direction: column;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__title {
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.ContactModal-module__MPB8Mq__subtitle {
+  color: var(--color-text-secondary);
+  margin-bottom: 40px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.ContactModal-module__MPB8Mq__form {
+  flex-direction: column;
+  gap: 24px;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__inputGroup {
+  flex-direction: column;
+  gap: 8px;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__inputGroup label {
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.ContactModal-module__MPB8Mq__inputGroup input, .ContactModal-module__MPB8Mq__inputGroup textarea {
+  border: 1px solid var(--color-border);
+  background: #f9f9f9;
+  padding: 16px;
+  font-size: 16px;
+  transition: all .3s;
+}
+
+.ContactModal-module__MPB8Mq__inputGroup input:focus, .ContactModal-module__MPB8Mq__inputGroup textarea:focus {
+  border-color: var(--color-brand-primary);
+  background: #fff;
+  outline: none;
+}
+
+.ContactModal-module__MPB8Mq__fileSection {
+  flex-direction: column;
+  gap: 12px;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__fileLabel {
+  cursor: pointer;
+}
+
+.ContactModal-module__MPB8Mq__hiddenInput {
+  display: none;
+}
+
+.ContactModal-module__MPB8Mq__fileBtn {
+  border: 1px dashed var(--color-border);
+  text-transform: uppercase;
+  color: var(--color-brand-primary);
+  background: #fff;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all .3s;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__fileBtn:hover {
+  border-color: var(--color-brand-primary);
+  background: #f0f7ff;
+}
+
+.ContactModal-module__MPB8Mq__fileName {
+  color: var(--color-text-main);
+  word-break: break-all;
+  background: #f0f0f0;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+}
+
+.ContactModal-module__MPB8Mq__actions {
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 8px;
+  display: flex;
+}
+
+.ContactModal-module__MPB8Mq__actions button {
+  width: 100%;
+}
+
+.ContactModal-module__MPB8Mq__disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  filter: grayscale();
+}
+
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/components/ui/TelegramWidget.module.css [app-client] (css) */
+.TelegramWidget-module__USF72a__widget {
+  background: var(--color-brand-primary);
+  z-index: 999;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  text-decoration: none;
+  transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+  display: flex;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  box-shadow: 0 4px 15px #0f172a66;
+}
+
+.TelegramWidget-module__USF72a__widget:hover {
+  background: var(--color-brand-primary-dark);
+  transform: scale(1.1)translateY(-5px);
+  box-shadow: 0 8px 25px #0f172a99;
+}
+
+.TelegramWidget-module__USF72a__widget:hover .TelegramWidget-module__USF72a__tooltip {
+  opacity: 1;
+  transform: translateX(-108%);
+}
+
+.TelegramWidget-module__USF72a__tooltip {
+  white-space: nowrap;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  background: #0f172ae6;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all .3s;
+  position: absolute;
+  right: 0;
+  transform: translateX(-100%);
+  box-shadow: 0 4px 12px #0000001a;
+}
+
+@media (max-width: 768px) {
+  .TelegramWidget-module__USF72a__widget {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/*# sourceMappingURL=Desktop_ai_3d_new_pulse3d-web_src_beeab095._.css.map*/

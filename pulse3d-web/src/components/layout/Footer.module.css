@@ -160,14 +160,30 @@
 }
 
 @media (max-width: 1024px) {
+    .footer {
+        padding: 60px 20px 40px;
+    }
+
     .footerMain {
         grid-template-columns: 1fr;
         gap: 60px;
+        margin-bottom: 60px;
     }
 
     .footerBottom {
         flex-direction: column;
         gap: 20px;
         text-align: center;
+    }
+
+    .tagline {
+        font-size: 18px;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .logoImage {
+        height: 80px;
     }
 }

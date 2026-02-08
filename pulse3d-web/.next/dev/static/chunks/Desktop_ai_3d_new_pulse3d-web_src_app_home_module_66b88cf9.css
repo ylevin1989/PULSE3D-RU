@@ -1,0 +1,280 @@
+/* [project]/Desktop/ai/3d_new/pulse3d-web/src/app/home.module.css [app-client] (css) */
+.home-module__Tgjtyq__main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.home-module__Tgjtyq__hero {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 80px;
+  min-height: calc(100vh - 90px);
+  padding: 80px 0;
+  display: grid;
+}
+
+.home-module__Tgjtyq__heroTags {
+  gap: 12px;
+  margin-bottom: 32px;
+  display: flex;
+}
+
+.home-module__Tgjtyq__tag {
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--color-brand-primary);
+  background: #0f172a0d;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.home-module__Tgjtyq__heroTitle {
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--color-brand-primary);
+  margin-bottom: 32px;
+  font-size: clamp(32px, 8vw, 72px);
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.home-module__Tgjtyq__heroDesc {
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin-bottom: 56px;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.home-module__Tgjtyq__heroActions {
+  gap: 20px;
+  display: flex;
+}
+
+.home-module__Tgjtyq__heroVisual {
+  position: relative;
+}
+
+.home-module__Tgjtyq__imageCard {
+  border: 1px solid var(--color-border);
+  box-shadow: 40px 40px 0 var(--color-surface);
+  background: #fff;
+  padding: 12px;
+  position: relative;
+}
+
+.home-module__Tgjtyq__heroImage {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+.home-module__Tgjtyq__imageOverlay {
+  background: var(--color-brand-primary);
+  color: #fff;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  display: flex;
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+}
+
+.home-module__Tgjtyq__statLine {
+  font-family: var(--font-mono);
+  letter-spacing: .1em;
+  justify-content: space-between;
+  gap: 32px;
+  font-size: 11px;
+  display: flex;
+}
+
+.home-module__Tgjtyq__statLine strong {
+  color: var(--color-brand-accent);
+}
+
+.home-module__Tgjtyq__uspSection {
+  border-top: 1px solid var(--color-border);
+  padding: 120px 0;
+}
+
+.home-module__Tgjtyq__uspGrid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  display: grid;
+}
+
+.home-module__Tgjtyq__uspCard {
+  flex-direction: column;
+  gap: 24px;
+  display: flex;
+}
+
+.home-module__Tgjtyq__uspIdx {
+  color: var(--color-brand-primary);
+  opacity: .1;
+  font-size: 48px;
+  font-weight: 900;
+  font-family: var(--font-mono);
+}
+
+.home-module__Tgjtyq__uspTitle {
+  text-transform: uppercase;
+  letter-spacing: -.5px;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.home-module__Tgjtyq__uspText {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.home-module__Tgjtyq__industriesSection {
+  padding-bottom: 120px;
+}
+
+.home-module__Tgjtyq__industryGrid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  display: grid;
+}
+
+.home-module__Tgjtyq__industryCard {
+  background: var(--color-surface);
+  border: 1px solid #0000;
+  padding: 60px;
+  transition: all .3s;
+}
+
+.home-module__Tgjtyq__industryCard:hover {
+  border-color: var(--color-brand-primary);
+  background: #fff;
+}
+
+.home-module__Tgjtyq__industryTitle {
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.home-module__Tgjtyq__industryDesc {
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.home-module__Tgjtyq__ctaBanner {
+  background: var(--color-brand-primary);
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 120px;
+  padding: 80px;
+  display: flex;
+}
+
+.home-module__Tgjtyq__ctaContent h2 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 40px;
+  font-weight: 950;
+}
+
+.home-module__Tgjtyq__ctaContent p {
+  color: #fff9;
+  font-size: 18px;
+}
+
+@media (max-width: 1100px) {
+  .home-module__Tgjtyq__main {
+    padding: 0 40px;
+  }
+
+  .home-module__Tgjtyq__hero {
+    text-align: center;
+    grid-template-columns: 1fr;
+    gap: 60px;
+    padding: 40px 0;
+  }
+
+  .home-module__Tgjtyq__heroTags {
+    justify-content: center;
+  }
+
+  .home-module__Tgjtyq__heroTitle {
+    font-size: 56px;
+  }
+
+  .home-module__Tgjtyq__heroActions {
+    justify-content: center;
+  }
+
+  .home-module__Tgjtyq__imageCard {
+    box-shadow: 20px 20px 0 var(--color-surface);
+  }
+
+  .home-module__Tgjtyq__uspGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-module__Tgjtyq__ctaBanner {
+    text-align: center;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-module__Tgjtyq__main {
+    padding: 0 20px;
+  }
+
+  .home-module__Tgjtyq__heroTitle {
+    letter-spacing: -1px;
+    font-size: 42px;
+  }
+
+  .home-module__Tgjtyq__heroDesc {
+    font-size: 18px;
+  }
+
+  .home-module__Tgjtyq__heroActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .home-module__Tgjtyq__heroActions .primary-button {
+    width: 100%;
+  }
+
+  .home-module__Tgjtyq__uspSection, .home-module__Tgjtyq__industriesSection {
+    padding: 60px 0;
+  }
+
+  .home-module__Tgjtyq__imageOverlay {
+    margin-top: 20px;
+    position: relative;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-module__Tgjtyq__uspGrid, .home-module__Tgjtyq__industryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-module__Tgjtyq__industryCard {
+    padding: 30px;
+  }
+}
+
+/*# sourceMappingURL=Desktop_ai_3d_new_pulse3d-web_src_app_home_module_66b88cf9.css.map*/

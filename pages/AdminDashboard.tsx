@@ -5,21 +5,21 @@ import { Section } from '../components/Section';
 import { Button } from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Save, RotateCcw, Plus, Trash2, Wand2, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 type Tab = 'contacts' | 'pricing' | 'equipment' | 'portfolio' | 'faq';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('contacts');
   const [generatingImages, setGeneratingImages] = useState<Record<number, boolean>>({});
-  
-  const { 
-    contactInfo, updateContactInfo, 
-    tariffs, updateTariffs, 
+
+  const {
+    contactInfo, updateContactInfo,
+    tariffs, updateTariffs,
     equipment, updateEquipment,
     portfolio, updatePortfolio,
     faqs, updateFaqs,
-    resetData 
+    resetData
   } = useData();
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -32,15 +32,16 @@ export const AdminDashboard: React.FC = () => {
   const generatePortfolioImage = async (index: number) => {
     const item = portfolio[index];
     if (!item.title) {
-        alert("Пожалуйста, введите название проекта");
-        return;
+      alert("Пожалуйста, введите название проекта");
+      return;
     }
 
     setGeneratingImages(prev => ({ ...prev, [index]: true }));
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      
+      const genAI = new GoogleGenerativeAI(process.env.API_KEY || '');
+      const ai = genAI.getGenerativeModel({ model: "gemini-2.0-flash" }); // Или другая актуальная модель
+
       const prompt = `Professional studio product photography of a 3D printed object: "${item.title}". 
       Material appearance: ${item.material}. Category: ${item.category || 'Industrial'}.
       Style: Industrial design, dark moody atmosphere, cinematic lighting with subtle gold rim light, high detail, 8k resolution, macro shot showing 3D printed layer texture.`;
@@ -48,15 +49,15 @@ export const AdminDashboard: React.FC = () => {
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: {
-            parts: [{ text: prompt }]
+          parts: [{ text: prompt }]
         },
         config: {
-            imageConfig: { aspectRatio: '1:1' }
+          imageConfig: { aspectRatio: '1:1' }
         }
       });
 
       const part = response.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
-      
+
       if (part && part.inlineData) {
         const base64Image = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
         const newPortfolio = [...portfolio];
@@ -112,24 +113,23 @@ export const AdminDashboard: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === tab.id 
-                      ? 'bg-brand-gold text-brand-black font-bold' 
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${activeTab === tab.id
+                      ? 'bg-brand-gold text-brand-black font-bold'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                    }`}
                 >
                   {tab.label}
                 </button>
               ))}
             </nav>
             <div className="mt-8 pt-8 border-t border-gray-800 space-y-4">
-              <button 
-                onClick={() => { if(confirm('Сбросить все изменения?')) resetData() }}
+              <button
+                onClick={() => { if (confirm('Сбросить все изменения?')) resetData() }}
                 className="flex items-center text-red-400 hover:text-red-300 text-sm"
               >
                 <RotateCcw className="w-4 h-4 mr-2" /> Сбросить данные
               </button>
-              <button 
+              <button
                 onClick={handleLogout}
                 className="flex items-center text-gray-500 hover:text-white text-sm"
               >
@@ -145,10 +145,10 @@ export const AdminDashboard: React.FC = () => {
             <div>
               <h3 className="text-2xl font-bold text-white mb-6">Редактирование Контактов</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField label="Телефон" value={contactInfo.phone} onChange={(v: string) => updateContactInfo({...contactInfo, phone: v})} />
-                <InputField label="Email" value={contactInfo.email} onChange={(v: string) => updateContactInfo({...contactInfo, email: v})} />
-                <InputField label="Адрес" value={contactInfo.address} onChange={(v: string) => updateContactInfo({...contactInfo, address: v})} />
-                <InputField label="Город" value={contactInfo.city} onChange={(v: string) => updateContactInfo({...contactInfo, city: v})} />
+                <InputField label="Телефон" value={contactInfo.phone} onChange={(v: string) => updateContactInfo({ ...contactInfo, phone: v })} />
+                <InputField label="Email" value={contactInfo.email} onChange={(v: string) => updateContactInfo({ ...contactInfo, email: v })} />
+                <InputField label="Адрес" value={contactInfo.address} onChange={(v: string) => updateContactInfo({ ...contactInfo, address: v })} />
+                <InputField label="Город" value={contactInfo.city} onChange={(v: string) => updateContactInfo({ ...contactInfo, city: v })} />
               </div>
             </div>
           )}
@@ -161,9 +161,9 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex justify-between mb-4">
                     <h4 className="text-brand-gold font-bold">Тариф #{idx + 1}</h4>
                     <label className="flex items-center text-sm text-gray-400">
-                      <input 
-                        type="checkbox" 
-                        checked={tariff.highlight || false} 
+                      <input
+                        type="checkbox"
+                        checked={tariff.highlight || false}
                         onChange={(e) => {
                           const newTariffs = [...tariffs];
                           newTariffs[idx].highlight = e.target.checked;
@@ -221,22 +221,22 @@ export const AdminDashboard: React.FC = () => {
                       newEq[idx].count = parseInt(v) || 0;
                       updateEquipment(newEq);
                     }} />
-                     <InputField label="Описание" type="textarea" value={item.description} onChange={(v: string) => {
+                    <InputField label="Описание" type="textarea" value={item.description} onChange={(v: string) => {
                       const newEq = [...equipment];
                       newEq[idx].description = v;
                       updateEquipment(newEq);
                     }} className="col-span-2" />
-                     <InputField label="Назначение" value={item.purpose} onChange={(v: string) => {
+                    <InputField label="Назначение" value={item.purpose} onChange={(v: string) => {
                       const newEq = [...equipment];
                       newEq[idx].purpose = v;
                       updateEquipment(newEq);
                     }} className="col-span-2" />
-                     <InputField label="Badge (Optional)" value={item.badge || ''} onChange={(v: string) => {
+                    <InputField label="Badge (Optional)" value={item.badge || ''} onChange={(v: string) => {
                       const newEq = [...equipment];
                       newEq[idx].badge = v;
                       updateEquipment(newEq);
                     }} />
-                     <InputField label="Image URL" value={item.imageUrl} onChange={(v: string) => {
+                    <InputField label="Image URL" value={item.imageUrl} onChange={(v: string) => {
                       const newEq = [...equipment];
                       newEq[idx].imageUrl = v;
                       updateEquipment(newEq);
@@ -248,121 +248,121 @@ export const AdminDashboard: React.FC = () => {
           )}
 
           {activeTab === 'portfolio' && (
-             <div className="space-y-8">
-               <div className="flex justify-between items-center mb-6">
+            <div className="space-y-8">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-2xl font-bold text-white">Портфолио</h3>
-                <Button 
+                <Button
                   onClick={() => updatePortfolio([...portfolio, { title: 'New Project', material: 'PLA', category: 'Other', imageUrl: 'https://via.placeholder.com/800' }])}
                   variant="outline"
                   className="px-4 py-2"
                 >
                   <Plus className="w-4 h-4 mr-2" /> Добавить
                 </Button>
-               </div>
-               
-               <div className="grid grid-cols-1 gap-6">
-                 {portfolio.map((item, idx) => (
-                   <div key={idx} className="flex flex-col xl:flex-row gap-6 p-6 bg-brand-black/40 rounded-xl border border-white/5 items-start">
-                     <div className="w-full xl:w-48 h-48 bg-gray-900 rounded-lg overflow-hidden flex-shrink-0 border border-white/5 relative group">
-                       <img src={item.imageUrl} className="w-full h-full object-cover" alt="" />
-                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-xs text-white uppercase tracking-widest font-bold">Preview</span>
-                       </div>
-                     </div>
-                     <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <InputField label="Название" value={item.title} onChange={(v: string) => {
-                          const newPort = [...portfolio];
-                          newPort[idx].title = v;
-                          updatePortfolio(newPort);
-                        }} />
-                        <InputField label="Категория" value={item.category || ''} onChange={(v: string) => {
-                          const newPort = [...portfolio];
-                          newPort[idx].category = v;
-                          updatePortfolio(newPort);
-                        }} />
-                        <InputField label="Материал" value={item.material} onChange={(v: string) => {
-                          const newPort = [...portfolio];
-                          newPort[idx].material = v;
-                          updatePortfolio(newPort);
-                        }} />
-                        
-                        {/* Custom Image URL Input with AI Gen Button */}
-                        <div className="col-span-1">
-                            <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">URL Фото / AI Gen</label>
-                            <div className="flex gap-2">
-                                <input 
-                                    value={item.imageUrl} 
-                                    onChange={(e) => {
-                                        const newPort = [...portfolio];
-                                        newPort[idx].imageUrl = e.target.value;
-                                        updatePortfolio(newPort);
-                                    }} 
-                                    className="w-full bg-brand-black/50 border border-gray-700 text-white px-4 py-2 rounded-lg focus:border-brand-gold focus:outline-none"
-                                    placeholder="https://..."
-                                />
-                                <button
-                                    onClick={() => generatePortfolioImage(idx)}
-                                    disabled={generatingImages[idx]}
-                                    className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-brand-gold/10 text-brand-gold border border-brand-gold/50 rounded-lg hover:bg-brand-gold/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                                    title="Сгенерировать AI изображение"
-                                >
-                                    {generatingImages[idx] ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wand2 className="w-5 h-5" />}
-                                </button>
-                            </div>
-                        </div>
+              </div>
 
-                     </div>
-                     <button 
-                       onClick={() => updatePortfolio(portfolio.filter((_, i) => i !== idx))}
-                       className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg self-start"
-                       title="Удалить"
-                     >
-                       <Trash2 className="w-5 h-5" />
-                     </button>
-                   </div>
-                 ))}
-               </div>
-             </div>
+              <div className="grid grid-cols-1 gap-6">
+                {portfolio.map((item, idx) => (
+                  <div key={idx} className="flex flex-col xl:flex-row gap-6 p-6 bg-brand-black/40 rounded-xl border border-white/5 items-start">
+                    <div className="w-full xl:w-48 h-48 bg-gray-900 rounded-lg overflow-hidden flex-shrink-0 border border-white/5 relative group">
+                      <img src={item.imageUrl} className="w-full h-full object-cover" alt="" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-xs text-white uppercase tracking-widest font-bold">Preview</span>
+                      </div>
+                    </div>
+                    <div className="flex-grow w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <InputField label="Название" value={item.title} onChange={(v: string) => {
+                        const newPort = [...portfolio];
+                        newPort[idx].title = v;
+                        updatePortfolio(newPort);
+                      }} />
+                      <InputField label="Категория" value={item.category || ''} onChange={(v: string) => {
+                        const newPort = [...portfolio];
+                        newPort[idx].category = v;
+                        updatePortfolio(newPort);
+                      }} />
+                      <InputField label="Материал" value={item.material} onChange={(v: string) => {
+                        const newPort = [...portfolio];
+                        newPort[idx].material = v;
+                        updatePortfolio(newPort);
+                      }} />
+
+                      {/* Custom Image URL Input with AI Gen Button */}
+                      <div className="col-span-1">
+                        <label className="block text-xs font-bold text-gray-500 mb-2 uppercase">URL Фото / AI Gen</label>
+                        <div className="flex gap-2">
+                          <input
+                            value={item.imageUrl}
+                            onChange={(e) => {
+                              const newPort = [...portfolio];
+                              newPort[idx].imageUrl = e.target.value;
+                              updatePortfolio(newPort);
+                            }}
+                            className="w-full bg-brand-black/50 border border-gray-700 text-white px-4 py-2 rounded-lg focus:border-brand-gold focus:outline-none"
+                            placeholder="https://..."
+                          />
+                          <button
+                            onClick={() => generatePortfolioImage(idx)}
+                            disabled={generatingImages[idx]}
+                            className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-brand-gold/10 text-brand-gold border border-brand-gold/50 rounded-lg hover:bg-brand-gold/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                            title="Сгенерировать AI изображение"
+                          >
+                            {generatingImages[idx] ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wand2 className="w-5 h-5" />}
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                    <button
+                      onClick={() => updatePortfolio(portfolio.filter((_, i) => i !== idx))}
+                      className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg self-start"
+                      title="Удалить"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
-           {activeTab === 'faq' && (
-             <div className="space-y-8">
-               <div className="flex justify-between items-center mb-6">
+          {activeTab === 'faq' && (
+            <div className="space-y-8">
+              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-2xl font-bold text-white">FAQ</h3>
-                <Button 
+                <Button
                   onClick={() => updateFaqs([...faqs, { question: 'Новый вопрос?', answer: 'Ответ...' }])}
                   variant="outline"
                   className="px-4 py-2"
                 >
                   <Plus className="w-4 h-4 mr-2" /> Добавить
                 </Button>
-               </div>
-               
-               <div className="space-y-6">
-                 {faqs.map((item, idx) => (
-                   <div key={idx} className="p-6 bg-brand-black/40 rounded-xl border border-white/5 relative">
-                     <div className="absolute top-4 right-4">
-                        <button 
-                          onClick={() => updateFaqs(faqs.filter((_, i) => i !== idx))}
-                          className="text-red-500 hover:text-red-400"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                     </div>
-                     <InputField label="Вопрос" value={item.question} onChange={(v: string) => {
-                        const newFaqs = [...faqs];
-                        newFaqs[idx].question = v;
-                        updateFaqs(newFaqs);
-                      }} />
-                      <InputField label="Ответ" type="textarea" value={item.answer} onChange={(v: string) => {
-                        const newFaqs = [...faqs];
-                        newFaqs[idx].answer = v;
-                        updateFaqs(newFaqs);
-                      }} className="mb-0" />
-                   </div>
-                 ))}
-               </div>
-             </div>
+              </div>
+
+              <div className="space-y-6">
+                {faqs.map((item, idx) => (
+                  <div key={idx} className="p-6 bg-brand-black/40 rounded-xl border border-white/5 relative">
+                    <div className="absolute top-4 right-4">
+                      <button
+                        onClick={() => updateFaqs(faqs.filter((_, i) => i !== idx))}
+                        className="text-red-500 hover:text-red-400"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <InputField label="Вопрос" value={item.question} onChange={(v: string) => {
+                      const newFaqs = [...faqs];
+                      newFaqs[idx].question = v;
+                      updateFaqs(newFaqs);
+                    }} />
+                    <InputField label="Ответ" type="textarea" value={item.answer} onChange={(v: string) => {
+                      const newFaqs = [...faqs];
+                      newFaqs[idx].answer = v;
+                      updateFaqs(newFaqs);
+                    }} className="mb-0" />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>

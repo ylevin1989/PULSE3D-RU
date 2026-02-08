@@ -124,9 +124,9 @@ body {
 
 /* Shared Layout Utilities */
 .section-title {
-  font-size: 64px;
+  font-size: clamp(32px, 8vw, 64px);
   font-weight: 500;
-  margin-bottom: 60px;
+  margin-bottom: clamp(30px, 8vw, 60px);
   text-transform: uppercase;
   letter-spacing: -1px;
 }

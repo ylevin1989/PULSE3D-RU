@@ -13,12 +13,12 @@ services:
       - ./src/data:/app/src/data
     labels:
       - "traefik.enable=true"
-      # Оставляем один домен для быстрой выдачи SSL. Добавьте www позже, когда пропишете его в DNS.
-      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`)"
-      - "traefik.http.routers.pulse3d.entrypoints=websecure"
-      - "traefik.http.routers.pulse3d.tls=true"
-      - "traefik.http.routers.pulse3d.tls.certresolver=mytlschallenge"
-      - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
+      - "traefik.http.routers.pulse3d-final.rule=Host(`pulse3d.ru`)"
+      - "traefik.http.routers.pulse3d-final.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d-final.tls=true"
+      - "traefik.http.routers.pulse3d-final.tls.certresolver=mytlschallenge"
+      - "traefik.http.routers.pulse3d-final.service=pulse3d-service"
+      - "traefik.http.services.pulse3d-service.loadbalancer.server.port=3000"
       - "traefik.docker.network=n8n_default"
     networks:
       - n8n_default
