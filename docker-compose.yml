@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   app:
     build: .
-    container_name: pulse3d-app # ФИКСИРОВАННОЕ ИМЯ
+    container_name: pulse3d-app
     restart: always
     environment:
-      - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
+      - DATABASE_URL=postgresql://pulse_user:pulse_password@pulse3d-db:5432/pulse_db
       - NODE_ENV=production
     depends_on:
       - db
@@ -26,7 +24,7 @@ services:
 
   db:
     image: postgres:15-alpine
-    container_name: pulse3d-db # ФИКСИРОВАННОЕ ИМЯ
+    container_name: pulse3d-db
     restart: always
     environment:
       POSTGRES_USER: pulse_user
