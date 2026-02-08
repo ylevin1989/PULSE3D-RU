@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Lenovo/Desktop/ai/3d_new/src/app/tech/layout.tsx"],"sourcesContent":["import { Metadata } from 'next';\r\n\r\nexport const metadata: Metadata = {\r\n    title: 'Оборудование и парк 3D-принтеров',\r\n    description: 'Наш парк оборудования для промышленной 3D-печати. Современные скоростные 3D-принтеры Bambu Lab для серийного производства деталей.',\r\n};\r\n\r\nexport default function TechLayout({\r\n    children,\r\n}: {\r\n    children: React.ReactNode;\r\n}) {\r\n    return <>{children}</>;\r\n}\r\n"],"names":[],"mappings":";;;;;;;;AAEO,MAAM,WAAqB;IAC9B,OAAO;IACP,aAAa;AACjB;AAEe,SAAS,WAAW,EAC/B,QAAQ,EAGX;IACG,qBAAO;kBAAG;;AACd"}}]
-}

@@ -1,3 +1,0 @@
-module.exports=[69805,a=>{"use strict";var b=a.i(75540);a.s([],95247),a.i(95247),a.s(["0083573bc9aa73a77e91ee57bbcfd92bfbc0557255",()=>b.getContent,"00a0e4122e1877d025fa70884eebba61b22c5fc725",()=>b.getLeads,"402e59b20d3aa77668ebcd2625497eeaf35f9a9de9",()=>b.deleteLead,"40bfe516f7d35b113ddb800e67c3e04e225bb2da55",()=>b.saveContent],69805)}];
-
-//# sourceMappingURL=Desktop_ai_3d_new__next-internal_server_app_portfolio_page_actions_a54ba939.js.map

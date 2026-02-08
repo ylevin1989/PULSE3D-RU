@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Lenovo/Desktop/ai/3d_new/src/components/ui/ModalTrigger.tsx"],"sourcesContent":["'use client';\r\n\r\nimport React from 'react';\r\nimport { useModal } from '@/context/ModalContext';\r\n\r\ninterface ModalTriggerProps {\r\n    children: React.ReactNode;\r\n    className?: string;\r\n    style?: React.CSSProperties;\r\n}\r\n\r\nconst ModalTrigger = ({ children, className, style }: ModalTriggerProps) => {\r\n    const { openModal } = useModal();\r\n\r\n    return (\r\n        <button onClick={openModal} className={className} style={style}>\r\n            {children}\r\n        </button>\r\n    );\r\n};\r\n\r\nexport default ModalTrigger;\r\n"],"names":[],"mappings":";;;;;AAGA;;;AAHA;;AAWA,MAAM,eAAe,CAAC,EAAE,QAAQ,EAAE,SAAS,EAAE,KAAK,EAAqB;;IACnE,MAAM,EAAE,SAAS,EAAE,GAAG,IAAA,yKAAQ;IAE9B,qBACI,wNAAC;QAAO,SAAS;QAAW,WAAW;QAAW,OAAO;kBACpD;;;;;;AAGb;GARM;;QACoB,yKAAQ;;;KAD5B;uCAUS"}}]
-}

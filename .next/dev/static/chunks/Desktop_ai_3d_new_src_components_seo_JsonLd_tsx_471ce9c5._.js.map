@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Lenovo/Desktop/ai/3d_new/src/components/seo/JsonLd.tsx"],"sourcesContent":["'use client';\r\n\r\nimport React from 'react';\r\n\r\ninterface JsonLdProps {\r\n    data: any;\r\n}\r\n\r\nconst JsonLd = ({ data }: JsonLdProps) => {\r\n    return (\r\n        <script\r\n            type=\"application/ld+json\"\r\n            dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\\\u003c') }}\r\n        />\r\n    );\r\n};\r\n\r\nexport default JsonLd;\r\n"],"names":[],"mappings":";;;;;AAAA;;AAQA,MAAM,SAAS,CAAC,EAAE,IAAI,EAAe;IACjC,qBACI,wNAAC;QACG,MAAK;QACL,yBAAyB;YAAE,QAAQ,KAAK,SAAS,CAAC,MAAM,OAAO,CAAC,MAAM;QAAW;;;;;;AAG7F;KAPM;uCASS"}}]
-}

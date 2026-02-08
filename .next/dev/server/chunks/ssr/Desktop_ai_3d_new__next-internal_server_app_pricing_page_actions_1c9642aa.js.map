@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Lenovo/Desktop/ai/3d_new/.next-internal/server/app/pricing/page/actions.js%20%28server%20actions%20loader%29"],"sourcesContent":["export {getLeads as '006f54838d6944fdf73cb5abd0e0b543925519f266'} from 'ACTIONS_MODULE0'\nexport {getContent as '0081b885406967cd86a934088ba00227629c5e56ca'} from 'ACTIONS_MODULE0'\nexport {deleteLead as '4050a2c5842bbe833078e74845f4b499903b536413'} from 'ACTIONS_MODULE0'\nexport {saveContent as '4085cb6ffbc57a39136746c2fca1610bd2499f6f01'} from 'ACTIONS_MODULE0'\n"],"names":[],"mappings":";AAAA"}}]
-}

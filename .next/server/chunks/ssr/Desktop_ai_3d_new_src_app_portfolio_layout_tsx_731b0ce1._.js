@@ -1,3 +1,0 @@
-module.exports=[78618,a=>{"use strict";var b=a.i(23031);function c({children:a}){return(0,b.jsx)(b.Fragment,{children:a})}a.s(["default",()=>c,"metadata",0,{title:"Портфолио и примеры работ",description:"Кейсы и примеры выполненных работ по 3D-печати. Изготовление корпусов, прототипов и серийных деталей из различных пластиков."}])}];
-
-//# sourceMappingURL=Desktop_ai_3d_new_src_app_portfolio_layout_tsx_731b0ce1._.js.map

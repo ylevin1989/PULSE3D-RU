@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/Lenovo/Desktop/ai/3d_new/src/app/contacts/layout.tsx"],"sourcesContent":["import { Metadata } from 'next';\r\n\r\nexport const metadata: Metadata = {\r\n    title: 'Контакты и адрес в Санкт-Петербурге',\r\n    description: 'Свяжитесь с PULSE 3D для заказа 3D-печати. Наш адрес в Санкт-Петербурге, телефон и форма обратной связи для расчета проекта.',\r\n};\r\n\r\nexport default function ContactsLayout({\r\n    children,\r\n}: {\r\n    children: React.ReactNode;\r\n}) {\r\n    return <>{children}</>;\r\n}\r\n"],"names":[],"mappings":";;;;;;;;AAEO,MAAM,WAAqB;IAC9B,OAAO;IACP,aAAa;AACjB;AAEe,SAAS,eAAe,EACnC,QAAQ,EAGX;IACG,qBAAO;kBAAG;;AACd"}}]
-}
