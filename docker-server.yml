@@ -13,7 +13,8 @@ services:
       - ./src/data:/app/src/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      # Оставляем один домен для быстрой выдачи SSL. Добавьте www позже, когда пропишете его в DNS.
+      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`)"
       - "traefik.http.routers.pulse3d.entrypoints=websecure"
       - "traefik.http.routers.pulse3d.tls=true"
       - "traefik.http.routers.pulse3d.tls.certresolver=mytlschallenge"
