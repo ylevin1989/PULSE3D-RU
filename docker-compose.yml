@@ -1,3 +1,4 @@
+# FINAL RELOAD - ТЕПЕРЬ ТОЧНО БЕЗ VERSION
 services:
   app:
     build: .
