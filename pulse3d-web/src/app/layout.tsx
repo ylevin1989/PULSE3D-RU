@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Suspense } from "react";
-import { ModalProvider } from "@/context/ModalContext";
-import ClientWrapper from "@/components/layout/ClientWrapper";
-import YandexMetrica from "@/components/analytics/YandexMetrica";
-import { getContent } from "@/app/admin/actions";
+import { ModalProvider } from "../context/ModalContext";
+import ClientWrapper from "../components/layout/ClientWrapper";
+import YandexMetrica from "../components/analytics/YandexMetrica";
+import { getContent } from "./admin/actions";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://pulse3d.ru'), // Change to actual domain when ready
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description: 'Серийное производство деталей из пластика и нейлона. Парк из 10 скоростных 3D-принтеров Bambu Lab.',
     images: [
       {
-        url: '/og-image.png', // Assuming we have or will have this
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'PULSE 3D Production',
