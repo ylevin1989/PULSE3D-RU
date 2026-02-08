@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+# Гарантируем наличие папки public для успешного копирования
+RUN mkdir -p public
 RUN npm run build
 
 # Production Stage
