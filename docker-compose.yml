@@ -14,10 +14,9 @@ services:
       - ./src/data:/app/src/data
     labels:
       - "traefik.enable=true"
-      # Укажите ваш настоящий домен вместо pulse3d.ru если он другой
       - "traefik.http.routers.pulse-app.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
       - "traefik.http.routers.pulse-app.entrypoints=websecure"
-      - "traefik.http.routers.pulse-app.tls.certresolver=myresolver"
+      - "traefik.http.routers.pulse-app.tls.certresolver=mytlschallenge" # ИСПРАВЛЕНО
       - "traefik.http.services.pulse-app.loadbalancer.server.port=3000"
     networks:
       - default
@@ -40,7 +39,7 @@ networks:
   default:
   n8n_network:
     external: true
-    name: n8n_default # Используем именно это имя из вашего списка
+    name: n8n_default
 
 volumes:
   postgres_data:
