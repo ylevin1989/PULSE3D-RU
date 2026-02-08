@@ -39,51 +39,48 @@ const Navbar = () => {
     return (
         <>
             <nav className={styles.navbar}>
-                <Link href="/" className={styles.logo}>
-                    <Image
-                        src="/logo_navy.png"
-                        alt="PULSE 3D Logo"
-                        width={300}
-                        height={100}
-                        priority
-                        className={styles.logoImage}
-                    />
-                </Link>
+                <div className={styles.navContainer}>
+                    <Link href="/" className={styles.logo}>
+                        <span className={styles.logoText}>
+                            PULSE <span className={styles.logoAccent}>3D</span>
+                        </span>
+                    </Link>
 
-                <div className={styles.navLinks}>
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            href={link.path}
-                            className={`${styles.navLink} ${pathname === link.path ? styles.active : ''}`}
-                        >
-                            {link.name}
-                        </Link>
-                    ))}
-                </div>
-
-                <div className={styles.navRight}>
-                    <div className={styles.headerPhone}>
-                        <a href={`tel:${settings.contactPhone.replace(/\D/g, '')}`} className={styles.phoneLink}>
-                            {settings.contactPhone}
-                        </a>
-                        <span className={styles.separator}> | </span>
-                        <Link href="/contacts#map" className={styles.cityLink}>
-                            {settings.address.split(',')[0]}
-                        </Link>
+                    <div className={styles.navLinks}>
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.path}
+                                href={link.path}
+                                className={`${styles.navLink} ${pathname === link.path ? styles.active : ''}`}
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
                     </div>
-                    <ModalTrigger className="primary-button primary-button--filled">
-                        Отправить файл
-                    </ModalTrigger>
-                </div>
 
-                <button
-                    className={styles.burger}
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
+                    <div className={styles.navRight}>
+                        <div className={styles.headerPhone}>
+                            <a href={`tel:${settings.contactPhone.replace(/\D/g, '')}`} className={styles.phoneLink}>
+                                {settings.contactPhone}
+                            </a>
+                            <span className={styles.separator}> | </span>
+                            <Link href="/contacts#map" className={styles.cityLink}>
+                                {settings.address.split(',')[0]}
+                            </Link>
+                        </div>
+                        <ModalTrigger className="primary-button primary-button--filled">
+                            Отправить файл
+                        </ModalTrigger>
+                    </div>
+
+                    <button
+                        className={styles.burger}
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+                </div>
             </nav>
 
             {/* Mobile Menu Overlay */}

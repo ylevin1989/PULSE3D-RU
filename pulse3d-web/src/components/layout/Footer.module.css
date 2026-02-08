@@ -40,19 +40,23 @@
 }
 
 .logo {
-    background-color: #0F172A;
     display: flex;
     align-items: center;
     width: fit-content;
+    margin-bottom: 24px;
 }
 
-.logoImage {
-    height: 120px;
-    width: auto;
-    filter: invert(1) brightness(1.2) contrast(3);
-    /* Extreme contrast to force background to absolute black for screen mode */
-    mix-blend-mode: screen;
-    opacity: 1;
+.logoText {
+    font-size: 36px;
+    font-weight: 950;
+    letter-spacing: -2px;
+    color: #ffffff;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.logoAccent {
+    color: var(--color-brand-accent);
 }
 
 .tagline {
@@ -69,22 +73,28 @@
 }
 
 .socialIcon {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #ffffff;
+    /* Иконка всегда белая */
+    transition: all 0.3s ease;
+}
+
+.socialIcon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
 }
 
 .socialIcon:hover {
-    background: #fff;
+    background: #ffffff;
     color: var(--color-brand-primary);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
 }
 
 .colTitle {
