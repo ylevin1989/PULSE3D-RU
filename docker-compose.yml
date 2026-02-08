@@ -3,8 +3,6 @@ version: '3.8'
 services:
   app:
     build: .
-    ports:
-      - "3000:3000"
     environment:
       - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
       - NODE_ENV=production
@@ -14,6 +12,15 @@ services:
     volumes:
       - ./public:/app/public
       - ./src/data:/app/src/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      - "traefik.http.routers.pulse3d.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d.tls.certresolver=myresolver" # Убедитесь, что имя резолвера совпадает с тем, что в конфиге Traefik
+      - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
+    networks:
+      - default
+      - n8n_network # Имя сети, в которой работает traefik-1
 
   db:
     image: postgres:15-alpine
@@ -22,11 +29,16 @@ services:
       POSTGRES_USER: pulse_user
       POSTGRES_PASSWORD: pulse_password
       POSTGRES_DB: pulse_db
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default
+
+networks:
+  default:
+  n8n_network:
+    external: true
 
 volumes:
   postgres_data:
