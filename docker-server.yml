@@ -1,0 +1,44 @@
+services:
+  app:
+    build: .
+    container_name: pulse3d-app
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://pulse_user:pulse_password@pulse3d-db:5432/pulse_db
+      - NODE_ENV=production
+    depends_on:
+      - db
+    volumes:
+      - ./public:/app/public
+      - ./src/data:/app/src/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pulse3d.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      - "traefik.http.routers.pulse3d.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d.tls=true"
+      - "traefik.http.routers.pulse3d.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.pulse3d.loadbalancer.server.port=3000"
+      - "traefik.docker.network=n8n_default"
+    networks:
+      - n8n_default
+
+  db:
+    image: postgres:15-alpine
+    container_name: pulse3d-db
+    restart: always
+    environment:
+      POSTGRES_USER: pulse_user
+      POSTGRES_PASSWORD: pulse_password
+      POSTGRES_DB: pulse_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - n8n_default
+
+networks:
+  n8n_default:
+    external: true
+
+volumes:
+  postgres_data:
