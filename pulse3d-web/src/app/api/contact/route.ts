@@ -21,8 +21,8 @@ export async function POST(request: Request) {
         }
 
         try {
-            const [result] = await pool.execute(
-                'INSERT INTO leads (name, phone, description, tariff, price, file_url) VALUES (?, ?, ?, ?, ?, ?)',
+            await pool.query(
+                'INSERT INTO leads (name, phone, description, tariff, price, file_url) VALUES ($1, $2, $3, $4, $5, $6)',
                 [name, phone, description, tariff || null, price || null, fileName]
             );
         } catch (dbError) {
