@@ -20,32 +20,34 @@
 }
 
 .tag {
-    font-size: 10px;
-    font-weight: 900;
+    font-size: 11px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    padding: 6px 12px;
-    background: rgba(15, 23, 42, 0.05);
+    letter-spacing: 0.15em;
+    padding: 8px 16px;
+    background: rgba(15, 23, 42, 0.03);
     color: var(--color-brand-primary);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 2px;
 }
 
 .heroTitle {
-    font-size: clamp(32px, 8vw, 72px);
-    font-weight: 950;
-    line-height: 1.1;
+    font-size: clamp(32px, 5.5vw, 68px);
+    font-weight: 700;
+    line-height: 1.15;
     text-transform: uppercase;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     color: var(--color-brand-primary);
     margin-bottom: 32px;
 }
 
 .heroDesc {
-    font-size: 22px;
-    line-height: 1.5;
+    font-size: 19px;
+    line-height: 1.7;
     color: var(--color-text-secondary);
-    max-width: 600px;
-    margin-bottom: 56px;
-    font-weight: 500;
+    max-width: 540px;
+    margin-bottom: 48px;
+    font-weight: 400;
 }
 
 .heroActions {
@@ -73,27 +75,32 @@
 
 .imageOverlay {
     position: absolute;
-    bottom: -20px;
-    right: -20px;
-    background: var(--color-brand-primary);
-    color: #fff;
+    bottom: 24px;
+    right: -40px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    color: var(--color-brand-primary);
     padding: 24px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+    min-width: 200px;
 }
 
 .statLine {
     display: flex;
     justify-content: space-between;
-    gap: 32px;
+    align-items: center;
+    gap: 40px;
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
 }
 
 .statLine strong {
-    color: var(--color-brand-accent);
+    color: var(--color-text-main);
 }
 
 .uspSection {

@@ -109,7 +109,10 @@ const Navbar = () => {
                             <MapPin size={18} className={styles.contactIcon} />
                             <span>{settings.address}</span>
                         </div>
-                        <ModalTrigger className="primary-button primary-button--filled w-full">
+                        <ModalTrigger
+                            className="primary-button primary-button--filled w-full"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
                             Рассчитать проект
                         </ModalTrigger>
                     </div>

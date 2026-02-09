@@ -8,13 +8,19 @@ interface ModalTriggerProps {
     className?: string;
     style?: React.CSSProperties;
     data?: any;
+    onClick?: () => void;
 }
 
-const ModalTrigger = ({ children, className, style, data }: ModalTriggerProps) => {
+const ModalTrigger = ({ children, className, style, data, onClick }: ModalTriggerProps) => {
     const { openModal } = useModal();
 
+    const handleClick = () => {
+        if (onClick) onClick();
+        openModal(data);
+    };
+
     return (
-        <button onClick={() => openModal(data)} className={className} style={style}>
+        <button onClick={handleClick} className={className} style={style}>
             {children}
         </button>
     );
