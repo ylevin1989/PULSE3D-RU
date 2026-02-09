@@ -38,6 +38,10 @@ body {
   overflow-x: hidden;
 }
 
+body.is-admin {
+  padding-top: 0 !important;
+}
+
 @media (max-width: 1100px) {
   body {
     padding-top: 70px;

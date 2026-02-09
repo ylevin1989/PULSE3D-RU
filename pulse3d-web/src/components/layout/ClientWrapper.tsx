@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -14,6 +15,14 @@ export default function ClientWrapper({
 }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
+
+    useEffect(() => {
+        if (isAdmin) {
+            document.body.classList.add('is-admin');
+        } else {
+            document.body.classList.remove('is-admin');
+        }
+    }, [isAdmin]);
 
     if (isAdmin) {
         return (

@@ -15,6 +15,7 @@ const AdminPage = () => {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -137,6 +138,13 @@ const AdminPage = () => {
         { id: 'settings', label: 'Настройки' },
     ];
 
+    const stats = {
+        totalLeads: leads.length,
+        leadsToday: leads.filter(l => new Date(l.created_at).toDateString() === new Date().toDateString()).length,
+        withFiles: leads.filter(l => l.file_url).length,
+        activeTariffs: content?.pricing?.tariffs?.length || 0
+    };
+
     const ImageField = ({ label, value, folder, onChange }: any) => (
         <div className={styles.field}>
             <label>{label}</label>
@@ -164,426 +172,492 @@ const AdminPage = () => {
 
     return (
         <div className={styles.adminContainer}>
-            <main className={styles.mainContent}>
-                <div className={styles.sectionHeader}>
-                    <h1>{tabs.find(t => t.id === activeTab)?.label}</h1>
-                    {activeTab !== 'leads' && (
-                        <button onClick={handleSave} className="primary-button primary-button--filled" disabled={saving}>
-                            {saving ? 'Сохранение...' : 'Сохранить изменения'}
-                        </button>
-                    )}
+            <header className={styles.adminHeader}>
+                <div className={styles.logo}>
+                    <div className={styles.logoText}>Pulse 3D <span style={{ color: '#3b82f6', fontSize: '12px' }}>Admin</span></div>
                 </div>
+                <button className={styles.mobileMenuBtn} onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    {isMenuOpen ? '✕' : '☰'}
+                </button>
+            </header>
 
-                {activeTab === 'leads' && (
-                    <div className={styles.leadsList}>
-                        {leads.length === 0 ? (
-                            <div className={styles.emptyLeads}>Пока нет активных заявок.</div>
-                        ) : (
-                            leads.map((lead) => (
-                                <div key={lead.id} className={styles.leadCard}>
-                                    <div className={styles.leadMain}>
-                                        <div className={styles.leadInfo}>
-                                            <div className={styles.leadHeader}>
-                                                <h3>{lead.name}</h3>
-                                                <span className={styles.leadDate}>
-                                                    {new Date(lead.created_at).toLocaleString('ru-RU')}
-                                                </span>
-                                            </div>
-                                            <a href={`tel:${lead.phone}`} className={styles.leadPhone}>{lead.phone}</a>
-                                            {lead.tariff && (
-                                                <div className={styles.leadTariff}>
-                                                    Тариф: <strong>{lead.tariff}</strong> ({lead.price})
-                                                </div>
-                                            )}
-                                            <div className={styles.leadDesc}>{lead.description}</div>
-                                            {lead.file_url && (
-                                                <div className={styles.leadFiles}>
-                                                    📎 Файл: <span className={styles.fileName}>{lead.file_url.split('_').slice(1).join('_')}</span>
-                                                    <em style={{ fontSize: '11px', color: '#888' }}>(файл в Telegram)</em>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <button
-                                            className={styles.deleteLeadBtn}
-                                            onClick={() => handleDeleteLead(lead.id)}
-                                        >
-                                            Удалить
-                                        </button>
-                                    </div>
-                                </div>
-                            ))
+            <div className={styles.adminLayout}>
+                <aside className={`${styles.sidebar} ${isMenuOpen ? styles.sidebarOpen : ''}`}>
+                    <div className={styles.sidebarHeader}>
+                        <Link href="/" className={styles.returnBtn}>
+                            ← Вернуться на сайт
+                        </Link>
+                    </div>
+
+                    <div className={styles.sidebarTitle}>Контент и данные</div>
+                    <nav className={styles.navSection}>
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => {
+                                    setActiveTab(tab.id);
+                                    setIsMenuOpen(false);
+                                }}
+                                className={`${styles.navLink} ${activeTab === tab.id ? styles.activeNavLink : ''}`}
+                            >
+                                {tab.id === 'leads' && '📁 '}
+                                {tab.id === 'home' && '🏠 '}
+                                {tab.id === 'pricing' && '💰 '}
+                                {tab.id === 'tech' && '⚙️ '}
+                                {tab.id === 'portfolio' && '⭐ '}
+                                {tab.id === 'settings' && '🔧 '}
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
+
+                    <div className={styles.sidebarTitle}>Аккаунт</div>
+                    <div className={styles.navSection}>
+                        <button className={styles.navLink} onClick={() => {
+                            document.cookie = "admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+                            window.location.reload();
+                        }}>
+                            🚪 Выйти из системы
+                        </button>
+                    </div>
+                </aside>
+
+                <main className={styles.mainContent}>
+                    <div className={styles.sectionHeader}>
+                        <h1>{tabs.find(t => t.id === activeTab)?.label}</h1>
+                        {activeTab !== 'leads' && (
+                            <button onClick={handleSave} className="primary-button primary-button--filled" disabled={saving}>
+                                {saving ? '⚡ Сохранение...' : '💾 Сохранить изменения'}
+                            </button>
                         )}
                     </div>
-                )}
 
-                {activeTab === 'home' && (
-                    <div className={styles.formContainer}>
-                        <div className={styles.fieldGroup}>
-                            <h3>Hero Секция (Первый экран)</h3>
-                            <div className={styles.field}>
-                                <label>Главный заголовок (H1)</label>
-                                <input value={content.home.heroTitle || ''} onChange={(e) => setContent({ ...content, home: { ...content.home, heroTitle: e.target.value } })} />
-                            </div>
-                            <div className={styles.field}>
-                                <label>Подзаголовок / Описание</label>
-                                <textarea rows={4} value={content.home.heroDesc || ''} onChange={(e) => setContent({ ...content, home: { ...content.home, heroDesc: e.target.value } })} />
-                            </div>
-                        </div>
-
-                        <div className={styles.fieldGroup}>
-                            <h3>Преимущества (USP)</h3>
-                            <div className={styles.grid}>
-                                {content.home.usp.map((item: any, idx: number) => (
-                                    <div key={idx} className={styles.itemCard}>
-                                        <div className={styles.itemHeader}>
-                                            <h4>Фактор #{idx + 1}</h4>
-                                            <button className={styles.deleteBtn} onClick={() => {
-                                                const newUsp = content.home.usp.filter((_: any, i: number) => i !== idx);
-                                                setContent({ ...content, home: { ...content.home, usp: newUsp } });
-                                            }}>Удалить</button>
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Заголовок</label>
-                                            <input value={item.title || ''} onChange={(e) => {
-                                                const newUsp = [...content.home.usp];
-                                                newUsp[idx].title = e.target.value;
-                                                setContent({ ...content, home: { ...content.home, usp: newUsp } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Описание</label>
-                                            <textarea rows={2} value={item.desc || ''} onChange={(e) => {
-                                                const newUsp = [...content.home.usp];
-                                                newUsp[idx].desc = e.target.value;
-                                                setContent({ ...content, home: { ...content.home, usp: newUsp } });
-                                            }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
-                                setContent({ ...content, home: { ...content.home, usp: [...content.home.usp, { title: '', desc: '' }] } });
-                            }}>+ Добавить фактор превосходства</div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'pricing' && (
-                    <div className={styles.formContainer}>
-                        <div className={styles.fieldGroup}>
-                            <h3>Тексты раздела Цены</h3>
-                            <div className={styles.field}>
-                                <label>Заголовок раздела</label>
-                                <input value={content.pricing.introTitle || ''} onChange={(e) => setContent({ ...content, pricing: { ...content.pricing, introTitle: e.target.value } })} />
-                            </div>
-                            <div className={styles.field}>
-                                <label>Вводный текст</label>
-                                <textarea rows={3} value={content.pricing.introText || ''} onChange={(e) => setContent({ ...content, pricing: { ...content.pricing, introText: e.target.value } })} />
-                            </div>
-                        </div>
-
-                        <div className={styles.fieldGroup}>
-                            <h3>Тарифные планы</h3>
-                            <div className={styles.grid}>
-                                {content.pricing.tariffs.map((tariff: any, idx: number) => (
-                                    <div key={idx} className={styles.itemCard}>
-                                        <div className={styles.itemHeader}>
-                                            <h4>Тариф: {tariff.name}</h4>
-                                            <button className={styles.deleteBtn} onClick={() => {
-                                                const newTariffs = content.pricing.tariffs.filter((_: any, i: number) => i !== idx);
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newTariffs } });
-                                            }}>Удалить</button>
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Название</label>
-                                            <input value={tariff.name || ''} onChange={(e) => {
-                                                const newT = [...content.pricing.tariffs];
-                                                newT[idx].name = e.target.value;
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Цена (за час/грамм)</label>
-                                            <input value={tariff.price || ''} onChange={(e) => {
-                                                const newT = [...content.pricing.tariffs];
-                                                newT[idx].price = e.target.value;
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Материалы</label>
-                                            <input value={tariff.materials || ''} onChange={(e) => {
-                                                const newT = [...content.pricing.tariffs];
-                                                newT[idx].materials = e.target.value;
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Оборудование</label>
-                                            <input value={tariff.equipment || ''} onChange={(e) => {
-                                                const newT = [...content.pricing.tariffs];
-                                                newT[idx].equipment = e.target.value;
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Область применения</label>
-                                            <input value={tariff.usage || ''} onChange={(e) => {
-                                                const newT = [...content.pricing.tariffs];
-                                                newT[idx].usage = e.target.value;
-                                                setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
-                                            }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
-                                setContent({ ...content, pricing: { ...content.pricing, tariffs: [...content.pricing.tariffs, { name: 'Новый тариф', price: '0 ₽', materials: '', equipment: '', usage: '' }] } });
-                            }}>+ Добавить тарифный план</div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'tech' && (
-                    <div className={styles.formContainer}>
-                        <div className={styles.fieldGroup}>
-                            <h3>Управление оборудованием</h3>
-                            <div className={styles.grid}>
-                                {content.tech.equipment.map((item: any, idx: number) => (
-                                    <div key={idx} className={styles.itemCard}>
-                                        <div className={styles.itemHeader}>
-                                            <h4>Принтер: {item.name}</h4>
-                                            <button className={styles.deleteBtn} onClick={() => {
-                                                const newE = content.tech.equipment.filter((_: any, i: number) => i !== idx);
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }}>Удалить</button>
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Модель принтера</label>
-                                            <input value={item.name || ''} onChange={(e) => {
-                                                const newE = [...content.tech.equipment];
-                                                newE[idx].name = e.target.value;
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Количество в парке</label>
-                                            <input value={item.qty || ''} onChange={(e) => {
-                                                const newE = [...content.tech.equipment];
-                                                newE[idx].qty = e.target.value;
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }} />
-                                        </div>
-                                        <ImageField
-                                            label="Изображение принтера"
-                                            value={item.image || ''}
-                                            folder="equipment"
-                                            onChange={(url: string) => {
-                                                const newE = [...content.tech.equipment];
-                                                newE[idx].image = url;
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }}
-                                        />
-                                        <div className={styles.field}>
-                                            <label>Техническое описание</label>
-                                            <textarea rows={3} value={item.desc || ''} onChange={(e) => {
-                                                const newE = [...content.tech.equipment];
-                                                newE[idx].desc = e.target.value;
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Специализация принтера</label>
-                                            <input value={item.usage || ''} onChange={(e) => {
-                                                const newE = [...content.tech.equipment];
-                                                newE[idx].usage = e.target.value;
-                                                setContent({ ...content, tech: { ...content.tech, equipment: newE } });
-                                            }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
-                                setContent({ ...content, tech: { ...content.tech, equipment: [...content.tech.equipment, { name: 'Bambu Lab X', qty: '1 шт.', desc: '', usage: '', image: '' }] } });
-                            }}>+ Добавить оборудование в парк</div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'portfolio' && (
-                    <div className={styles.formContainer}>
-                        <div className={styles.fieldGroup}>
-                            <h3>Проекты в портфолио</h3>
-                            <div className={styles.grid}>
-                                {content.portfolio.works.map((work: any, idx: number) => (
-                                    <div key={idx} className={styles.itemCard}>
-                                        <div className={styles.itemHeader}>
-                                            <h4>Проект: {work.title}</h4>
-                                            <button className={styles.deleteBtn} onClick={() => {
-                                                const newW = content.portfolio.works.filter((_: any, i: number) => i !== idx);
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }}>Удалить</button>
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Название проекта</label>
-                                            <input value={work.title || ''} onChange={(e) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].title = e.target.value;
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Slug (часть URL-адреса)</label>
-                                            <input value={work.slug || ''} onChange={(e) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].slug = e.target.value;
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }} />
-                                        </div>
-                                        <ImageField
-                                            label="Обложка проекта"
-                                            value={work.image || ''}
-                                            folder="cases"
-                                            onChange={(url: string) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].image = url;
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }}
-                                        />
-                                        <div className={styles.field}>
-                                            <label>Используемый материал</label>
-                                            <input value={work.material || ''} onChange={(e) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].material = e.target.value;
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Краткий анонс</label>
-                                            <textarea rows={2} value={work.desc || ''} onChange={(e) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].desc = e.target.value;
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }} />
-                                        </div>
-                                        <div className={styles.field}>
-                                            <label>Детали кейса (Вызов/Решение/Результат - каждая фраза с новой строки)</label>
-                                            <textarea rows={6} value={work.details?.join('\n') || ''} onChange={(e) => {
-                                                const newW = [...content.portfolio.works];
-                                                newW[idx].details = e.target.value.split('\n');
-                                                setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
-                                            }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
-                                const newWork = { title: 'Новый проект', slug: 'new-case', image: '', material: '', desc: '', details: [] };
-                                setContent({ ...content, portfolio: { ...content.portfolio, works: [...content.portfolio.works, newWork] } });
-                            }}>+ Опубликовать новый проект</div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'settings' && (
-                    <div className={styles.formContainer}>
-                        <div className={styles.fieldGroup}>
-                            <h3>Контактная информация</h3>
-                            <div className={styles.field}>
-                                <label>Физический адрес</label>
-                                <input value={content.settings.address || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, address: e.target.value } })} />
-                            </div>
-                            <div className={styles.field}>
-                                <label>Контактный телефон</label>
-                                <input value={content.settings.contactPhone || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, contactPhone: e.target.value } })} />
-                            </div>
-                            <div className={styles.field}>
-                                <label>Основной Email</label>
-                                <input value={content.settings.contactEmail || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, contactEmail: e.target.value } })} />
-                            </div>
-                        </div>
-
-                        <div className={styles.fieldGroup}>
-                            <h3>Социальные сети и ссылки</h3>
-                            <div className={styles.grid}>
-                                <div className={styles.field}>
-                                    <label>Ссылка на Telegram</label>
-                                    <input value={content.settings.telegramLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramLink: e.target.value } })} />
+                    {activeTab === 'leads' && (
+                        <>
+                            <div className={styles.statsRow}>
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Всего заявок</span>
+                                    <span className={styles.statValue}>{stats.totalLeads}</span>
+                                    <span className={styles.statTrend}>за всё время</span>
                                 </div>
-                                <div className={styles.field}>
-                                    <label>Ссылка на WhatsApp</label>
-                                    <input value={content.settings.whatsappLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, whatsappLink: e.target.value } })} />
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Новые сегодня</span>
+                                    <span className={styles.statValue}>{stats.leadsToday}</span>
+                                    <span className={styles.statTrend}>активность</span>
                                 </div>
-                                <div className={styles.field}>
-                                    <label>Ссылка на YouTube</label>
-                                    <input value={content.settings.youtubeLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, youtubeLink: e.target.value } })} />
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>С файлами (STL/ZIP)</span>
+                                    <span className={styles.statValue}>{stats.withFiles}</span>
+                                    <span className={styles.statTrend}>нужен расчет</span>
                                 </div>
-                                <div className={styles.field}>
-                                    <label>Ссылка на Avito</label>
-                                    <input value={content.settings.avitoLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, avitoLink: e.target.value } })} />
+                                <div className={styles.statCard}>
+                                    <span className={styles.statLabel}>Активные тарифы</span>
+                                    <span className={styles.statValue}>{stats.activeTariffs}</span>
+                                    <span className={styles.statTrend}>в эфире</span>
                                 </div>
                             </div>
+
+                            <div className={styles.leadsList}>
+                                {leads.length === 0 ? (
+                                    <div className={styles.emptyLeads}>
+                                        <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
+                                        Пока нет активных заявок.
+                                    </div>
+                                ) : (
+                                    leads.map((lead) => (
+                                        <div key={lead.id} className={styles.leadCard}>
+                                            <div className={styles.leadMain}>
+                                                <div className={styles.leadInfo}>
+                                                    <div className={styles.leadHeader}>
+                                                        <h3>👤 {lead.name}</h3>
+                                                        <span className={styles.leadDate}>
+                                                            📅 {new Date(lead.created_at).toLocaleString('ru-RU')}
+                                                        </span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                        <a href={`tel:${lead.phone}`} className={styles.leadPhone}>📞 {lead.phone}</a>
+                                                        {lead.file_url && (
+                                                            <div className={styles.leadFiles}>
+                                                                📎 <strong>Вложение:</strong> <span className={styles.fileName}>{lead.file_url.split('_').slice(1).join('_')}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {lead.tariff && (
+                                                        <div className={styles.leadTariff}>
+                                                            🏷️ Тариф: <strong>{lead.tariff}</strong> ({lead.price})
+                                                        </div>
+                                                    )}
+                                                    <div className={styles.leadDesc}>
+                                                        <strong>Описание задачи:</strong><br />
+                                                        {lead.description}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className={styles.deleteLeadBtn}
+                                                    onClick={() => handleDeleteLead(lead.id)}
+                                                >
+                                                    🗑️ Удалить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </>
+                    )}
+
+                    {activeTab === 'home' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.fieldGroup}>
+                                <h3>Hero Секция (Первый экран)</h3>
+                                <div className={styles.field}>
+                                    <label>Главный заголовок (H1)</label>
+                                    <input value={content.home.heroTitle || ''} onChange={(e) => setContent({ ...content, home: { ...content.home, heroTitle: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Подзаголовок / Описание</label>
+                                    <textarea rows={4} value={content.home.heroDesc || ''} onChange={(e) => setContent({ ...content, home: { ...content.home, heroDesc: e.target.value } })} />
+                                </div>
+                            </div>
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Преимущества (USP)</h3>
+                                <div className={styles.grid}>
+                                    {content.home.usp.map((item: any, idx: number) => (
+                                        <div key={idx} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4>Фактор #{idx + 1}</h4>
+                                                <button className={styles.deleteBtn} onClick={() => {
+                                                    const newUsp = content.home.usp.filter((_: any, i: number) => i !== idx);
+                                                    setContent({ ...content, home: { ...content.home, usp: newUsp } });
+                                                }}>Удалить</button>
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Заголовок</label>
+                                                <input value={item.title || ''} onChange={(e) => {
+                                                    const newUsp = [...content.home.usp];
+                                                    newUsp[idx].title = e.target.value;
+                                                    setContent({ ...content, home: { ...content.home, usp: newUsp } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Описание</label>
+                                                <textarea rows={2} value={item.desc || ''} onChange={(e) => {
+                                                    const newUsp = [...content.home.usp];
+                                                    newUsp[idx].desc = e.target.value;
+                                                    setContent({ ...content, home: { ...content.home, usp: newUsp } });
+                                                }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
+                                    setContent({ ...content, home: { ...content.home, usp: [...content.home.usp, { title: '', desc: '' }] } });
+                                }}>+ Добавить фактор превосходства</div>
+                            </div>
                         </div>
+                    )}
 
-                        <div className={styles.fieldGroup}>
-                            <h3>Разработка и поддержка (Agency)</h3>
-                            <div className={styles.field}>
-                                <label>Название агентства</label>
-                                <input value={content.settings.agencyName || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyName: e.target.value } })} />
+                    {activeTab === 'pricing' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.fieldGroup}>
+                                <h3>Тексты раздела Цены</h3>
+                                <div className={styles.field}>
+                                    <label>Заголовок раздела</label>
+                                    <input value={content.pricing.introTitle || ''} onChange={(e) => setContent({ ...content, pricing: { ...content.pricing, introTitle: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Вводный текст</label>
+                                    <textarea rows={3} value={content.pricing.introText || ''} onChange={(e) => setContent({ ...content, pricing: { ...content.pricing, introText: e.target.value } })} />
+                                </div>
                             </div>
-                            <div className={styles.field}>
-                                <label>Ссылка на сайт агентства</label>
-                                <input value={content.settings.agencyLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyLink: e.target.value } })} />
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Тарифные планы</h3>
+                                <div className={styles.grid}>
+                                    {content.pricing.tariffs.map((tariff: any, idx: number) => (
+                                        <div key={idx} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4>Тариф: {tariff.name}</h4>
+                                                <button className={styles.deleteBtn} onClick={() => {
+                                                    const newTariffs = content.pricing.tariffs.filter((_: any, i: number) => i !== idx);
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newTariffs } });
+                                                }}>Удалить</button>
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Название</label>
+                                                <input value={tariff.name || ''} onChange={(e) => {
+                                                    const newT = [...content.pricing.tariffs];
+                                                    newT[idx].name = e.target.value;
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Цена (за час/грамм)</label>
+                                                <input value={tariff.price || ''} onChange={(e) => {
+                                                    const newT = [...content.pricing.tariffs];
+                                                    newT[idx].price = e.target.value;
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Материалы</label>
+                                                <input value={tariff.materials || ''} onChange={(e) => {
+                                                    const newT = [...content.pricing.tariffs];
+                                                    newT[idx].materials = e.target.value;
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Оборудование</label>
+                                                <input value={tariff.equipment || ''} onChange={(e) => {
+                                                    const newT = [...content.pricing.tariffs];
+                                                    newT[idx].equipment = e.target.value;
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Область применения</label>
+                                                <input value={tariff.usage || ''} onChange={(e) => {
+                                                    const newT = [...content.pricing.tariffs];
+                                                    newT[idx].usage = e.target.value;
+                                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: newT } });
+                                                }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
+                                    setContent({ ...content, pricing: { ...content.pricing, tariffs: [...content.pricing.tariffs, { name: 'Новый тариф', price: '0 ₽', materials: '', equipment: '', usage: '' }] } });
+                                }}>+ Добавить тарифный план</div>
                             </div>
                         </div>
+                    )}
 
-                        <div className={styles.fieldGroup}>
-                            <h3>Интеграция с Telegram Bot</h3>
-                            <div className={styles.field}>
-                                <label>Bot Token</label>
-                                <input type="password" value={content.settings.telegramToken || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramToken: e.target.value } })} />
-                            </div>
-                            <div className={styles.field}>
-                                <label>Target Chat ID</label>
-                                <input value={content.settings.telegramChatId || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramChatId: e.target.value } })} />
+                    {activeTab === 'tech' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.fieldGroup}>
+                                <h3>Управление оборудованием</h3>
+                                <div className={styles.grid}>
+                                    {content.tech.equipment.map((item: any, idx: number) => (
+                                        <div key={idx} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4>Принтер: {item.name}</h4>
+                                                <button className={styles.deleteBtn} onClick={() => {
+                                                    const newE = content.tech.equipment.filter((_: any, i: number) => i !== idx);
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }}>Удалить</button>
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Модель принтера</label>
+                                                <input value={item.name || ''} onChange={(e) => {
+                                                    const newE = [...content.tech.equipment];
+                                                    newE[idx].name = e.target.value;
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Количество в парке</label>
+                                                <input value={item.qty || ''} onChange={(e) => {
+                                                    const newE = [...content.tech.equipment];
+                                                    newE[idx].qty = e.target.value;
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }} />
+                                            </div>
+                                            <ImageField
+                                                label="Изображение принтера"
+                                                value={item.image || ''}
+                                                folder="equipment"
+                                                onChange={(url: string) => {
+                                                    const newE = [...content.tech.equipment];
+                                                    newE[idx].image = url;
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }}
+                                            />
+                                            <div className={styles.field}>
+                                                <label>Техническое описание</label>
+                                                <textarea rows={3} value={item.desc || ''} onChange={(e) => {
+                                                    const newE = [...content.tech.equipment];
+                                                    newE[idx].desc = e.target.value;
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Специализация принтера</label>
+                                                <input value={item.usage || ''} onChange={(e) => {
+                                                    const newE = [...content.tech.equipment];
+                                                    newE[idx].usage = e.target.value;
+                                                    setContent({ ...content, tech: { ...content.tech, equipment: newE } });
+                                                }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
+                                    setContent({ ...content, tech: { ...content.tech, equipment: [...content.tech.equipment, { name: 'Bambu Lab X', qty: '1 шт.', desc: '', usage: '', image: '' }] } });
+                                }}>+ Добавить оборудование в парк</div>
                             </div>
                         </div>
+                    )}
 
-                        <div className={styles.fieldGroup}>
-                            <h3>Метрика и Аналитика</h3>
-                            <div className={styles.field}>
-                                <label>Yandex Metrica ID</label>
-                                <input
-                                    placeholder="Например: 12345678"
-                                    value={content.settings.yandexMetricaId || ''}
-                                    onChange={(e) => setContent({ ...content, settings: { ...content.settings, yandexMetricaId: e.target.value } })}
-                                />
+                    {activeTab === 'portfolio' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.fieldGroup}>
+                                <h3>Проекты в портфолио</h3>
+                                <div className={styles.grid}>
+                                    {content.portfolio.works.map((work: any, idx: number) => (
+                                        <div key={idx} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4>Проект: {work.title}</h4>
+                                                <button className={styles.deleteBtn} onClick={() => {
+                                                    const newW = content.portfolio.works.filter((_: any, i: number) => i !== idx);
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }}>Удалить</button>
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Название проекта</label>
+                                                <input value={work.title || ''} onChange={(e) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].title = e.target.value;
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Slug (часть URL-адреса)</label>
+                                                <input value={work.slug || ''} onChange={(e) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].slug = e.target.value;
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }} />
+                                            </div>
+                                            <ImageField
+                                                label="Обложка проекта"
+                                                value={work.image || ''}
+                                                folder="cases"
+                                                onChange={(url: string) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].image = url;
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }}
+                                            />
+                                            <div className={styles.field}>
+                                                <label>Используемый материал</label>
+                                                <input value={work.material || ''} onChange={(e) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].material = e.target.value;
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Краткий анонс</label>
+                                                <textarea rows={2} value={work.desc || ''} onChange={(e) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].desc = e.target.value;
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Детали кейса (Вызов/Решение/Результат - каждая фраза с новой строки)</label>
+                                                <textarea rows={6} value={work.details?.join('\n') || ''} onChange={(e) => {
+                                                    const newW = [...content.portfolio.works];
+                                                    newW[idx].details = e.target.value.split('\n');
+                                                    setContent({ ...content, portfolio: { ...content.portfolio, works: newW } });
+                                                }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
+                                    const newWork = { title: 'Новый проект', slug: 'new-case', image: '', material: '', desc: '', details: [] };
+                                    setContent({ ...content, portfolio: { ...content.portfolio, works: [...content.portfolio.works, newWork] } });
+                                }}>+ Опубликовать новый проект</div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </main>
+                    )}
 
-            <aside className={styles.sidebar}>
-                <div className={styles.sidebarTitle}>СИСТЕМА УПРАВЛЕНИЯ</div>
-                <nav className={styles.navSection}>
-                    {tabs.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`${styles.navLink} ${activeTab === tab.id ? styles.activeNavLink : ''}`}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </nav>
+                    {activeTab === 'settings' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.fieldGroup}>
+                                <h3>Контактная информация</h3>
+                                <div className={styles.field}>
+                                    <label>Физический адрес</label>
+                                    <input value={content.settings.address || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, address: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Контактный телефон</label>
+                                    <input value={content.settings.contactPhone || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, contactPhone: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Основной Email</label>
+                                    <input value={content.settings.contactEmail || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, contactEmail: e.target.value } })} />
+                                </div>
+                            </div>
 
-                <div className={styles.sidebarFooter}>
-                    <Link href="/" className={styles.returnBtn}>
-                        <span>Проверить изменения</span>
-                    </Link>
-                </div>
-            </aside>
+                            <div className={styles.fieldGroup}>
+                                <h3>Социальные сети и ссылки</h3>
+                                <div className={styles.grid}>
+                                    <div className={styles.field}>
+                                        <label>Телеграм (Прямая связь / Личный)</label>
+                                        <input value={content.settings.telegramLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramLink: e.target.value } })} />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Телеграм-канал (Публичный)</label>
+                                        <input value={content.settings.telegramChannelLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramChannelLink: e.target.value } })} />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Ссылка на WhatsApp</label>
+                                        <input value={content.settings.whatsappLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, whatsappLink: e.target.value } })} />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Ссылка на YouTube</label>
+                                        <input value={content.settings.youtubeLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, youtubeLink: e.target.value } })} />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Ссылка на Avito</label>
+                                        <input value={content.settings.avitoLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, avitoLink: e.target.value } })} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Разработка и поддержка (Agency)</h3>
+                                <div className={styles.field}>
+                                    <label>Название агентства</label>
+                                    <input value={content.settings.agencyName || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyName: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Ссылка на сайт агентства</label>
+                                    <input value={content.settings.agencyLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyLink: e.target.value } })} />
+                                </div>
+                            </div>
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Интеграция с Telegram Bot</h3>
+                                <div className={styles.field}>
+                                    <label>Bot Token</label>
+                                    <input type="password" value={content.settings.telegramToken || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramToken: e.target.value } })} />
+                                </div>
+                                <div className={styles.field}>
+                                    <label>Target Chat ID</label>
+                                    <input value={content.settings.telegramChatId || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramChatId: e.target.value } })} />
+                                </div>
+                            </div>
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Метрика и Аналитика</h3>
+                                <div className={styles.field}>
+                                    <label>Yandex Metrica ID</label>
+                                    <input
+                                        placeholder="Например: 12345678"
+                                        value={content.settings.yandexMetricaId || ''}
+                                        onChange={(e) => setContent({ ...content, settings: { ...content.settings, yandexMetricaId: e.target.value } })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </main>
+            </div>
         </div>
     );
 };

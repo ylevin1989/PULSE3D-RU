@@ -97,9 +97,9 @@ const ContactsClient = () => {
                     <div className={styles.contactBlock}>
                         <span className={styles.blockLabel}>Цифровые каналы</span>
                         <div className={styles.socialStack}>
-                            <a href={settings.telegramLink} target="_blank" className={styles.socialCard}>
+                            <a href={settings.telegramChannelLink} target="_blank" className={styles.socialCard}>
                                 <span>Telegram</span>
-                                <strong>Open Chat</strong>
+                                <strong>Our Channel</strong>
                             </a>
                             <a href={settings.whatsappLink} target="_blank" className={styles.socialCard}>
                                 <span>WhatsApp</span>
