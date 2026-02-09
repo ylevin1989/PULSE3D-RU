@@ -27,7 +27,7 @@ export default function ClientWrapper({
         <>
             <div className="bg-grid"></div>
             <Navbar />
-            <main style={{ paddingTop: '90px' }}>{children}</main>
+            <main>{children}</main>
             <Footer />
             <ContactModal />
             <TelegramWidget link={content.settings.telegramLink} />
