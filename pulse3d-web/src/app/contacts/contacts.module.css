@@ -295,3 +295,19 @@
         grid-template-columns: 1fr;
     }
 }
+
+.privacyNotice {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin-top: 16px;
+}
+
+.privacyNotice a {
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+}
+
+.privacyNotice a:hover {
+    text-decoration: none;
+}

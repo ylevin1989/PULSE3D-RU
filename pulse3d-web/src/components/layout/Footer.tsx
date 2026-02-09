@@ -42,6 +42,7 @@ const Footer = () => {
                     <Link href="/pricing">Цены</Link>
                     <Link href="/tech">Оборудование</Link>
                     <Link href="/portfolio">Портфолио</Link>
+                    <Link href="/about">О компании</Link>
                     <Link href="/contacts">Контакты</Link>
                 </div>
 
@@ -58,7 +59,10 @@ const Footer = () => {
             </div>
 
             <div className={styles.footerBottom}>
-                <p>© 2025 PULSE 3D. Все права защищены.</p>
+                <div className={styles.footerLegal}>
+                    <p>© 2025 PULSE 3D. Все права защищены.</p>
+                    <Link href="/privacy" className={styles.privacyLink}>Политика конфиденциальности</Link>
+                </div>
                 <div className={styles.io}>
                     Сделано в <a href={settings.agencyLink || '#'} target="_blank" className={styles.agencyLink}>{settings.agencyName || 'UNO Agency'}</a>
                 </div>

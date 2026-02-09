@@ -169,6 +169,22 @@
     text-decoration-color: var(--color-brand-accent) !important;
 }
 
+.footerLegal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.privacyLink {
+    color: rgba(255, 255, 255, 0.4) !important;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.privacyLink:hover {
+    color: #fff !important;
+}
+
 @media (max-width: 1024px) {
     .footer {
         padding: 60px 20px 40px;

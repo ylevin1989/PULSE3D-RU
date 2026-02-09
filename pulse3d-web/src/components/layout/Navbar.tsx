@@ -33,6 +33,7 @@ const Navbar = () => {
         { name: 'ЦЕНЫ', path: '/pricing' },
         { name: 'ОБОРУДОВАНИЕ', path: '/tech' },
         { name: 'ПОРТФОЛИО', path: '/portfolio' },
+        { name: 'О НАС', path: '/about' },
         { name: 'КОНТАКТЫ', path: '/contacts' },
     ];
 

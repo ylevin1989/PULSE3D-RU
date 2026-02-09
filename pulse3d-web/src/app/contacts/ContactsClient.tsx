@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './contacts.module.css';
+import Link from 'next/link';
 import contentData from '../../data/content.json';
 
 const ContactsClient = () => {
@@ -174,6 +175,9 @@ const ContactsClient = () => {
                                         ОТПРАВИТЬ
                                     </button>
                                 </div>
+                                <p className={styles.privacyNotice}>
+                                    Нажимая кнопку «ОТПРАВИТЬ», вы даете согласие на обработку персональных данных в соответствии с <Link href="/privacy">политикой конфиденциальности</Link>.
+                                </p>
                             </div>
                         </form>
                     </div>

@@ -136,3 +136,19 @@
         font-size: 12px;
     }
 }
+
+.privacyNotice {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.privacyNotice a {
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+}
+
+.privacyNotice a:hover {
+    text-decoration: none;
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Modal from '../ui/Modal';
 import { useModal } from '../../context/ModalContext';
 import styles from './ContactModal.module.css';
@@ -151,6 +152,9 @@ const ContactModal = () => {
                         >
                             Отправить заявку
                         </button>
+                        <p className={styles.privacyNotice}>
+                            Нажимая кнопку «Отправить», вы даете согласие на обработку персональных данных в соответствии с <Link href="/privacy" onClick={closeModal}>политикой конфиденциальности</Link>.
+                        </p>
                     </div>
                 </form>
             </div>
