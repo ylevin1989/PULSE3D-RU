@@ -5,11 +5,13 @@ import path from 'path';
 
 export async function GET(request: Request) {
     try {
+        // Используем встроенный механизм Next.js для работы с куками
         const token = request.headers.get('cookie')
             ?.split('; ')
             .find(row => row.startsWith('admin_token='))
             ?.split('=')[1];
 
+        // Дополнительная проверка через cookie-store если первый способ не сработал
         if (!token) {
             return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
         }

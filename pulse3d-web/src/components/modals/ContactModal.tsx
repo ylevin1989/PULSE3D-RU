@@ -119,7 +119,7 @@ const ContactModal = () => {
                     <div className={styles.inputGroup}>
                         <label>Описание задачи</label>
                         <textarea
-                            rows={4}
+                            rows={2}
                             placeholder="Опишите вашу деталь, материал или требования..."
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
