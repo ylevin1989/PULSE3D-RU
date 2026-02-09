@@ -1,5 +1,5 @@
 .container {
-    padding: 80px 60px 120px;
+    padding: 10px 60px 120px;
     max-width: 1440px;
     margin: 0 auto;
 }
@@ -21,11 +21,11 @@
 }
 
 .heroTitle {
-    font-size: clamp(40px, 8vw, 96px);
-    font-weight: 950;
+    font-size: clamp(32px, 8vw, 64px);
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: -3px;
-    line-height: 1;
+    letter-spacing: -1px;
+    line-height: 1.1;
     color: var(--color-brand-primary);
     margin: 0;
 }
@@ -59,10 +59,10 @@
 }
 
 .addressText {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1.4;
-    color: var(--color-brand-primary);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
     max-width: 450px;
 }
 
@@ -141,10 +141,10 @@
 }
 
 .formTitle {
-    font-size: 32px;
-    font-weight: 950;
+    font-size: 24px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     margin-bottom: 40px;
     color: var(--color-brand-primary);
 }
