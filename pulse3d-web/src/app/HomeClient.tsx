@@ -81,6 +81,22 @@ export default function HomeClient() {
                 </div>
             </section>
 
+            <section className={styles.faqSection}>
+                <h2 className="section-title">FAQ / <span style={{ color: '#94a3b8' }}>ВОПРОСЫ</span></h2>
+                <div className={styles.faqGrid}>
+                    {home.faq?.map((item: any, idx: number) => (
+                        <details key={idx} className={styles.faqItem}>
+                            <summary className={styles.faqQuestion}>
+                                {item.question}
+                            </summary>
+                            <div className={styles.faqAnswer}>
+                                {item.answer}
+                            </div>
+                        </details>
+                    ))}
+                </div>
+            </section>
+
             <section className={styles.ctaBanner}>
                 <div className={styles.ctaContent}>
                     <h2>ГОТОВЫ НАЧАТЬ ПРОИЗВОДСТВО?</h2>

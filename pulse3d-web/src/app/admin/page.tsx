@@ -355,6 +355,44 @@ const AdminPage = () => {
                                     setContent({ ...content, home: { ...content.home, usp: [...content.home.usp, { title: '', desc: '' }] } });
                                 }}>+ Добавить фактор превосходства</div>
                             </div>
+
+                            <div className={styles.fieldGroup}>
+                                <h3>Часто задаваемые вопросы (FAQ)</h3>
+                                <div className={styles.grid}>
+                                    {content.home.faq?.map((item: any, idx: number) => (
+                                        <div key={idx} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4>Вопрос #{idx + 1}</h4>
+                                                <button className={styles.deleteBtn} onClick={() => {
+                                                    const newFaq = content.home.faq.filter((_: any, i: number) => i !== idx);
+                                                    setContent({ ...content, home: { ...content.home, faq: newFaq } });
+                                                }}>Удалить</button>
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Вопрос</label>
+                                                <input value={item.question || ''} onChange={(e) => {
+                                                    const newFaq = [...content.home.faq];
+                                                    newFaq[idx].question = e.target.value;
+                                                    setContent({ ...content, home: { ...content.home, faq: newFaq } });
+                                                }} />
+                                            </div>
+                                            <div className={styles.field}>
+                                                <label>Ответ</label>
+                                                <textarea rows={3} value={item.answer || ''} onChange={(e) => {
+                                                    const newFaq = [...content.home.faq];
+                                                    newFaq[idx].answer = e.target.value;
+                                                    setContent({ ...content, home: { ...content.home, faq: newFaq } });
+                                                }} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className={styles.addBtn} style={{ marginTop: '24px' }} onClick={() => {
+                                    const newFaq = content.home.faq ? [...content.home.faq] : [];
+                                    newFaq.push({ question: '', answer: '' });
+                                    setContent({ ...content, home: { ...content.home, faq: newFaq } });
+                                }}>+ Добавить вопрос</div>
+                            </div>
                         </div>
                     )}
 
