@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Suspense } from "react";
+
+export const dynamic = "force-dynamic";
 import { ModalProvider } from "../context/ModalContext";
 import ClientWrapper from "../components/layout/ClientWrapper";
 import YandexMetrica from "../components/analytics/YandexMetrica";
@@ -41,7 +43,12 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  }
+  },
+  icons: {
+    icon: '/logo_original.png',
+    shortcut: '/logo_original.png',
+    apple: '/logo_original.png',
+  },
 };
 
 export const viewport: Viewport = {

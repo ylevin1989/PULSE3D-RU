@@ -1,4 +1,6 @@
 'use server';
+import { revalidatePath } from 'next/cache';
+
 
 import pool from '../../lib/db';
 
@@ -15,6 +17,7 @@ export async function saveContent(newData: any) {
     const path = await import('path');
     const filePath = path.join(process.cwd(), 'src/data/content.json');
     await fs.writeFile(filePath, JSON.stringify(newData, null, 4), 'utf8');
+    revalidatePath('/');
     return { success: true };
 }
 
