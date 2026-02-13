@@ -3,31 +3,38 @@ version: '3.8'
 services:
   app:
     build: .
-    ports:
-      - "3000:3000"
     environment:
-      - DB_HOST=db
-      - DB_USER=pulse_user
-      - DB_PASSWORD=pulse_password
-      - DB_NAME=pulse_db
+      - DATABASE_URL=postgresql://pulse_user:pulse_password@db:5432/pulse_db
       - NODE_ENV=production
     depends_on:
       - db
     restart: always
+    networks:
+      - n8n_default
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pulse3d-web.rule=Host(`pulse3d.ru`) || Host(`www.pulse3d.ru`)"
+      - "traefik.http.routers.pulse3d-web.entrypoints=websecure"
+      - "traefik.http.routers.pulse3d-web.tls=true"
+      - "traefik.http.routers.pulse3d-web.tls.certresolver=ls"
+      - "traefik.http.services.pulse3d-web.loadbalancer.server.port=3000"
 
   db:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    image: postgres:15-alpine
     restart: always
     environment:
-      MYSQL_DATABASE: pulse_db
-      MYSQL_USER: pulse_user
-      MYSQL_PASSWORD: pulse_password
-      MYSQL_ROOT_PASSWORD: root_password
-    ports:
-      - "3306:3306"
+      POSTGRES_USER: pulse_user
+      POSTGRES_PASSWORD: pulse_password
+      POSTGRES_DB: pulse_db
     volumes:
-      - db_data:/var/lib/mysql
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - default
+
+networks:
+  n8n_default:
+    external: true
 
 volumes:
-  db_data:
+  pg_data:
