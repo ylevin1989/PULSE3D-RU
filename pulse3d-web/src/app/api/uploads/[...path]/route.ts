@@ -4,10 +4,11 @@ import path from 'path';
 
 export async function GET(
     request: Request,
-    { params }: { params: { path: string[] } }
+    { params }: { params: Promise<{ path: string[] }> }
 ) {
     try {
-        const filePath = params.path.join('/');
+        const { path: pathSegments } = await params;
+        const filePath = pathSegments.join('/');
         // Security check: prevent path traversal
         const safePath = filePath.replace(/\.\./g, '');
         const fullPath = path.join(process.cwd(), 'public/uploads', safePath);
@@ -30,9 +31,11 @@ export async function GET(
                 },
             });
         } catch (error) {
+            console.error('File read error:', fullPath, error);
             return NextResponse.json({ error: 'File not found' }, { status: 404 });
         }
     } catch (error) {
+        console.error('Dynamic upload serve error:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
