@@ -86,12 +86,17 @@ const AdminPage = () => {
                 method: 'POST',
                 body: formData
             });
+
             const data = await res.json();
-            if (data.url) {
+
+            if (res.ok && data.url) {
                 callback(data.url);
+            } else {
+                alert(`Ошибка загрузки: ${data.error || 'Неизвестная ошибка'}`);
             }
         } catch (error) {
-            alert('Ошибка при загрузке изображения');
+            console.error('Upload error:', error);
+            alert('Ошибка при загрузке изображения на сервер');
         }
     };
 
