@@ -38,7 +38,8 @@ export async function POST(request: Request) {
         await fs.writeFile(path.join(uploadDir, fileName), buffer);
 
         // Construct URL - folder is part of path
-        const relativeUrl = `/uploads/${folder ? folder + '/' : ''}${fileName}`;
+        // Use /api/uploads prefix to ensure dynamic serving
+        const relativeUrl = `/api/uploads/${folder ? folder + '/' : ''}${fileName}`;
 
         return NextResponse.json({
             success: true,
