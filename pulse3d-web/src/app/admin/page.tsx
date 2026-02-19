@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getContent, saveContent, getLeads, deleteLead, getArticles, saveArticle, deleteArticle, initBlog } from './actions';
+import { getContent, saveContentAction as saveContent, getLeads, deleteLead, getArticles, saveArticle, deleteArticle, initBlog } from './actions';
 import styles from './admin.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -798,35 +798,11 @@ const AdminPage = () => {
                                 <h3>Разработка и поддержка (Agency)</h3>
                                 <div className={styles.field}>
                                     <label>Название агентства</label>
-                                    <input value={content.settings.agencyName || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyName: e.target.value } })} />
+                                    <input value={content.settings.masterAgency || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, masterAgency: e.target.value } })} />
                                 </div>
                                 <div className={styles.field}>
-                                    <label>Ссылка на сайт агентства</label>
-                                    <input value={content.settings.agencyLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, agencyLink: e.target.value } })} />
-                                </div>
-                            </div>
-
-                            <div className={styles.fieldGroup}>
-                                <h3>Интеграция with Telegram Bot</h3>
-                                <div className={styles.field}>
-                                    <label>Bot Token</label>
-                                    <input type="password" value={content.settings.telegramToken || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramToken: e.target.value } })} />
-                                </div>
-                                <div className={styles.field}>
-                                    <label>Target Chat ID</label>
-                                    <input value={content.settings.telegramChatId || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramChatId: e.target.value } })} />
-                                </div>
-                            </div>
-
-                            <div className={styles.fieldGroup}>
-                                <h3>Метрика и Аналитика</h3>
-                                <div className={styles.field}>
-                                    <label>Yandex Metrica ID</label>
-                                    <input
-                                        placeholder="Например: 12345678"
-                                        value={content.settings.yandexMetricaId || ''}
-                                        onChange={(e) => setContent({ ...content, settings: { ...content.settings, yandexMetricaId: e.target.value } })}
-                                    />
+                                    <label>Ссылка на агентство</label>
+                                    <input value={content.settings.masterLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, masterLink: e.target.value } })} />
                                 </div>
                             </div>
                         </div>
