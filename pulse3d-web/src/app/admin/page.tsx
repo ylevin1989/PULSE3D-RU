@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getContent, saveContent, getLeads, deleteLead } from './actions';
+import { getContent, saveContent, getLeads, deleteLead, getArticles, saveArticle, deleteArticle, initBlog } from './actions';
 import styles from './admin.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,8 +9,10 @@ import Link from 'next/link';
 const AdminPage = () => {
     const [content, setContent] = useState<any>(null);
     const [leads, setLeads] = useState<any[]>([]);
+    const [articles, setArticles] = useState<any[]>([]);
     const [saving, setSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('leads'); // Default to leads
+    const [editingArticle, setEditingArticle] = useState<any>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
@@ -23,10 +25,13 @@ const AdminPage = () => {
                 const response = await fetch('/api/login/check');
                 if (response.ok) {
                     setIsAuthenticated(true);
+                    await initBlog();
                     const data = await getContent();
                     setContent(data);
                     const leadsData = await getLeads();
                     setLeads(leadsData);
+                    const articlesData = await getArticles();
+                    setArticles(articlesData);
                 }
             } catch (error) {
                 console.error('Auth check failed');
@@ -77,6 +82,27 @@ const AdminPage = () => {
         alert('Все изменения успешно сохранены!');
     };
 
+    const handleSaveArticle = async (article: any) => {
+        setSaving(true);
+        const res = await saveArticle(article);
+        if (res.success) {
+            const data = await getArticles();
+            setArticles(data);
+            setEditingArticle(null);
+            alert('Статья сохранена!');
+        }
+        setSaving(false);
+    };
+
+    const handleDeleteArticle = async (id: number) => {
+        if (confirm('Удалить статью?')) {
+            const res = await deleteArticle(id);
+            if (res.success) {
+                setArticles(articles.filter(a => a.id !== id));
+            }
+        }
+    };
+
     const handleImageUpload = async (file: File, folder: string, callback: (url: string) => void) => {
         const formData = new FormData();
         formData.append('file', file);
@@ -87,12 +113,17 @@ const AdminPage = () => {
                 method: 'POST',
                 body: formData
             });
+
             const data = await res.json();
-            if (data.url) {
+
+            if (res.ok && data.url) {
                 callback(data.url);
+            } else {
+                alert(`Ошибка загрузки: ${data.error || 'Неизвестная ошибка'}`);
             }
         } catch (error) {
-            alert('Ошибка при загрузке изображения');
+            console.error('Upload error:', error);
+            alert('Ошибка при загрузке изображения на сервер');
         }
     };
 
@@ -135,6 +166,7 @@ const AdminPage = () => {
         { id: 'pricing', label: 'Цены' },
         { id: 'tech', label: 'Оборудование' },
         { id: 'portfolio', label: 'Кейсы' },
+        { id: 'blog', label: 'Блог' },
         { id: 'settings', label: 'Настройки' },
     ];
 
@@ -205,6 +237,7 @@ const AdminPage = () => {
                                 {tab.id === 'pricing' && '💰 '}
                                 {tab.id === 'tech' && '⚙️ '}
                                 {tab.id === 'portfolio' && '⭐ '}
+                                {tab.id === 'blog' && '📝 '}
                                 {tab.id === 'settings' && '🔧 '}
                                 {tab.label}
                             </button>
@@ -613,6 +646,110 @@ const AdminPage = () => {
                         </div>
                     )}
 
+                    {activeTab === 'blog' && (
+                        <div className={styles.formContainer}>
+                            <div className={styles.sectionActions}>
+                                {!editingArticle ? (
+                                    <button
+                                        className="primary-button primary-button--filled"
+                                        onClick={() => setEditingArticle({ title: '', slug: '', content: '', excerpt: '', image_url: '', category: 'Article' })}
+                                    >
+                                        + Написать статью
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="primary-button"
+                                        onClick={() => setEditingArticle(null)}
+                                    >
+                                        ← Назад к списку
+                                    </button>
+                                )}
+                            </div>
+
+                            {editingArticle ? (
+                                <div className={styles.fieldGroup}>
+                                    <h3>{editingArticle.id ? 'Редактирование статьи' : 'Новая статья'}</h3>
+                                    <div className={styles.field}>
+                                        <label>Заголовок статьи</label>
+                                        <input
+                                            value={editingArticle.title}
+                                            onChange={(e) => setEditingArticle({ ...editingArticle, title: e.target.value, slug: e.target.value.toLowerCase().replace(/ /g, '-').replace(/[^\w-а-я]/g, '') })}
+                                        />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>URL Slug (генерируется автоматически)</label>
+                                        <input
+                                            value={editingArticle.slug}
+                                            onChange={(e) => setEditingArticle({ ...editingArticle, slug: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Категория</label>
+                                        <select
+                                            value={editingArticle.category}
+                                            onChange={(e) => setEditingArticle({ ...editingArticle, category: e.target.value })}
+                                            className={styles.select}
+                                        >
+                                            <option value="Article">Статья</option>
+                                            <option value="Tech Doc">Тех. документация</option>
+                                            <option value="News">Новости</option>
+                                        </select>
+                                    </div>
+                                    <ImageField
+                                        label="Обложка статьи"
+                                        value={editingArticle.image_url}
+                                        folder="blog"
+                                        onChange={(url: string) => setEditingArticle({ ...editingArticle, image_url: url })}
+                                    />
+                                    <div className={styles.field}>
+                                        <label>Краткое описание (для SEO и анонса)</label>
+                                        <textarea
+                                            rows={2}
+                                            value={editingArticle.excerpt}
+                                            onChange={(e) => setEditingArticle({ ...editingArticle, excerpt: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className={styles.field}>
+                                        <label>Контент статьи (Поддерживает HTML)</label>
+                                        <textarea
+                                            rows={15}
+                                            value={editingArticle.content}
+                                            onChange={(e) => setEditingArticle({ ...editingArticle, content: e.target.value })}
+                                        />
+                                    </div>
+                                    <button
+                                        className="primary-button primary-button--filled"
+                                        onClick={() => handleSaveArticle(editingArticle)}
+                                        disabled={saving}
+                                        style={{ marginTop: '20px' }}
+                                    >
+                                        {saving ? 'Сохранение...' : 'Опубликовать статью'}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className={styles.grid}>
+                                    {articles.map((article) => (
+                                        <div key={article.id} className={styles.itemCard}>
+                                            <div className={styles.itemHeader}>
+                                                <h4 style={{ margin: 0 }}>{article.title}</h4>
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <button className={styles.editBtn} onClick={() => setEditingArticle(article)}>✏️</button>
+                                                    <button className={styles.deleteBtn} onClick={() => handleDeleteArticle(article.id)}>🗑️</button>
+                                                </div>
+                                            </div>
+                                            <p style={{ fontSize: '12px', color: '#64748b', margin: '8px 0' }}>Slug: {article.slug}</p>
+                                            <div className={styles.itemPreview}>
+                                                {article.image_url && <Image src={article.image_url} alt="" width={100} height={60} style={{ borderRadius: '4px', objectFit: 'cover' }} />}
+                                                <p style={{ fontSize: '13px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.excerpt}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {articles.length === 0 && <p>Статей пока нет.</p>}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {activeTab === 'settings' && (
                         <div className={styles.formContainer}>
                             <div className={styles.fieldGroup}>
@@ -670,7 +807,7 @@ const AdminPage = () => {
                             </div>
 
                             <div className={styles.fieldGroup}>
-                                <h3>Интеграция с Telegram Bot</h3>
+                                <h3>Интеграция with Telegram Bot</h3>
                                 <div className={styles.field}>
                                     <label>Bot Token</label>
                                     <input type="password" value={content.settings.telegramToken || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, telegramToken: e.target.value } })} />
