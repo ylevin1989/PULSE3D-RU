@@ -14,6 +14,7 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
         const cats = new Set(initialArticles.map(a => a.category || 'Статья'));
         return ['Все', ...Array.from(cats)];
     }, [initialArticles]);
+
     const filteredArticles = useMemo(() => {
         return initialArticles.filter(article => {
             const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
