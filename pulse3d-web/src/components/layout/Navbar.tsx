@@ -31,8 +31,10 @@ const Navbar = () => {
     const navLinks = [
         { name: 'ГЛАВНАЯ', path: '/' },
         { name: 'ЦЕНЫ', path: '/pricing' },
-        { name: 'ОБОРУДОВАНИЕ', path: '/tech' },
-        { name: 'ПОРТФОЛИО', path: '/portfolio' },
+        { name: 'ТЕХНОЛОГИИ', path: '/tech' },
+        { name: 'КЕЙСЫ', path: '/portfolio' },
+        { name: 'БЛОГ', path: '/blog' },
+        { name: 'МЕРЧ', path: '/merch' },
         { name: 'О НАС', path: '/about' },
         { name: 'КОНТАКТЫ', path: '/contacts' },
     ];
