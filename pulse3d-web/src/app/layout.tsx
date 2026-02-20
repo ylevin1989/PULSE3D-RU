@@ -6,7 +6,7 @@ import { ModalProvider } from "../context/ModalContext";
 import ClientWrapper from "../components/layout/ClientWrapper";
 import YandexMetrica from "../components/analytics/YandexMetrica";
 import { getPublicSettings } from "./admin/actions";
-import StructuredData from "../components/seo/StructuredData";
+import JsonLd from "../components/seo/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,17 @@ export default async function RootLayout({
   return (
     <html lang="ru">
       <head>
-        <StructuredData />
+        <JsonLd data={{
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "PULSE 3D",
+          "telephone": settings.contactPhone,
+          "email": settings.contactEmail,
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": settings.address
+          }
+        }} />
       </head>
       <body className={inter.className}>
         <Suspense fallback={null}>
