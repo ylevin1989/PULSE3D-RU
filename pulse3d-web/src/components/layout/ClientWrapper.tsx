@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ContactModal from "@/components/modals/ContactModal";
 import TelegramWidget from "@/components/ui/TelegramWidget";
-import content from '@/data/content.json';
 
 export default function ClientWrapper({
     children,
+    settings,
 }: {
     children: React.ReactNode;
+    settings: any;
 }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
@@ -35,11 +36,11 @@ export default function ClientWrapper({
     return (
         <>
             <div className="bg-grid"></div>
-            <Navbar />
+            <Navbar settings={settings} />
             <main>{children}</main>
-            <Footer />
+            <Footer settings={settings} />
             <ContactModal />
-            <TelegramWidget link={content.settings.telegramLink} />
+            <TelegramWidget link={settings.telegramLink} />
         </>
     );
 }

@@ -2,28 +2,27 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './merch.module.css';
-import content from '../../data/content.json';
 import ModalTrigger from '@/components/ui/ModalTrigger';
+import { getContent } from '../admin/actions';
 
 export const metadata: Metadata = {
     title: 'Мерч и Сувениры | PULSE 3D',
-    description: 'Брендированная сувенирная продукция и мерч с использованием 3D-печати в Санкт-Петербурге. Уникальные решения для вашего бизнеса.',
+    description: 'Брендированная сувенирная продукция и мерч с использованием 3D-печати в Санкт-Петербурге.',
 };
 
-export default function MerchPage() {
+export default async function MerchPage() {
+    const content = await getContent();
     const { merch } = content;
 
     return (
         <main className={styles.main}>
-            {/* Intro Section */}
             <section className={styles.intro}>
                 <h1 className={styles.title}>{merch.introTitle}</h1>
                 <p className={styles.desc}>{merch.introText}</p>
             </section>
 
-            {/* Categories Grid */}
             <section className={styles.categoriesGrid}>
-                {merch.categories.map((category, idx) => (
+                {merch.categories.map((category: any, idx: number) => (
                     <div key={idx} className={styles.categoryCard}>
                         <div className={styles.imageWrapper}>
                             <Image
@@ -42,7 +41,6 @@ export default function MerchPage() {
                 ))}
             </section>
 
-            {/* CTA Banner */}
             <section className={styles.ctaBanner}>
                 <div className={styles.ctaContent}>
                     <h2>Готовы создать свой мерч?</h2>
