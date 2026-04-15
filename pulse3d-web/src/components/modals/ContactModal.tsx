@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Modal from '../ui/Modal';
 import { useModal } from '../../context/ModalContext';
 import styles from './ContactModal.module.css';
+import { trackLeadSubmit } from '../../lib/analytics';
 
 const ContactModal = () => {
     const { isOpen, data, closeModal } = useModal();
@@ -69,6 +70,15 @@ const ContactModal = () => {
             });
 
             if (response.ok) {
+                trackLeadSubmit({
+                    source: 'modal',
+                    name: formData.name,
+                    phone: formData.phone,
+                    description: formData.description,
+                    tariff: data?.tariff,
+                    price: data?.price,
+                    hasFile: Boolean(file),
+                });
                 alert('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
                 setFormData({ name: '', phone: '', description: '' });
                 setFile(null);

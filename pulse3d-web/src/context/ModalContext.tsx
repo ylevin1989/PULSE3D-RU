@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { trackLeadFormOpen } from '../lib/analytics';
 
 interface ModalContextType {
     isOpen: boolean;
@@ -18,6 +19,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     const openModal = (modalData?: any) => {
         setData(modalData || null);
         setIsOpen(true);
+        trackLeadFormOpen('modal');
     };
 
     const closeModal = () => {

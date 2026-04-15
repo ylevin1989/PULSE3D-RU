@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './contacts.module.css';
 import Link from 'next/link';
 import contentData from '../../data/content.json';
+import { trackLeadFormOpen, trackLeadSubmit } from '../../lib/analytics';
 
 const ContactsClient = () => {
     const settings = contentData.settings as any;
@@ -14,6 +15,7 @@ const ContactsClient = () => {
         description: ''
     });
     const [file, setFile] = useState<File | null>(null);
+    const hasTrackedFormOpen = useRef(false);
 
     const formatPhoneNumber = (value: string) => {
         const numbers = value.replace(/\D/g, '');
@@ -59,6 +61,13 @@ const ContactsClient = () => {
             });
 
             if (response.ok) {
+                trackLeadSubmit({
+                    source: 'contacts_page',
+                    name: formData.name,
+                    phone: formData.phone,
+                    description: formData.description,
+                    hasFile: Boolean(file),
+                });
                 alert('Заявка принята. Мы перезвоним вам в ближайшее время.');
                 setFormData({ name: '', phone: '', description: '' });
                 setFile(null);
@@ -120,7 +129,15 @@ const ContactsClient = () => {
                 <div className={styles.formContainer}>
                     <div className={styles.formPanel}>
                         <h2 className={styles.formTitle}>Запустить проект</h2>
-                        <form onSubmit={handleSubmit} className={styles.contactForm}>
+                        <form
+                            onSubmit={handleSubmit}
+                            className={styles.contactForm}
+                            onFocusCapture={() => {
+                                if (hasTrackedFormOpen.current) return;
+                                hasTrackedFormOpen.current = true;
+                                trackLeadFormOpen('contacts_page');
+                            }}
+                        >
                             <div className={styles.inputGroup}>
                                 <label className={styles.inputLabel}>Ваше имя</label>
                                 <input
