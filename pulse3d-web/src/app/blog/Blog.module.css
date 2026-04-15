@@ -190,9 +190,9 @@
 }
 
 .featuredCard .imageWrapper {
-    width: 45%;
+    width: 40%;
     height: auto;
-    min-height: 400px;
+    min-height: 360px;
 }
 
 .imageWrapper {
@@ -284,8 +284,8 @@
 }
 
 .featuredCard .excerpt {
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
 }
 
 .cardFooter {
