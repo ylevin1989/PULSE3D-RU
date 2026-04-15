@@ -60,13 +60,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     };
 
     return (
-        <article className={styles.articlePage}>
+        <article
+            className={styles.articlePage}
+            itemScope
+            itemType="https://schema.org/Article"
+        >
+            <Script
+                id={`article-ld-json-${article.slug}`}
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+            />
+            <meta itemProp="author" content="PULSE 3D" />
+            <meta itemProp="dateModified" content={article.updated_at || article.created_at} />
+            <meta itemProp="mainEntityOfPage" content={`https://pulse3d.ru/blog/${article.slug}`} />
             <header className={styles.header}>
                 <div className={styles.articleContainer}>
                     <div className={styles.meta}>
                         <span className={styles.category}>{article.category || 'Статья'}</span>
                         <span className={styles.dot}>•</span>
-                        <time className={styles.date}>
+                        <time
+                            className={styles.date}
+                            dateTime={article.created_at || new Date().toISOString()}
+                            itemProp="datePublished"
+                        >
                             {new Date(article.created_at || Date.now()).toLocaleDateString('ru-RU', {
                                 day: 'numeric',
                                 month: 'long',
@@ -74,8 +90,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             })}
                         </time>
                     </div>
-                    <h1 className={styles.title}>{article.title}</h1>
-                    <p className={styles.description}>{article.excerpt}</p>
+                    <h1 className={styles.title} itemProp="headline">{article.title}</h1>
+                    <p className={styles.description} itemProp="description">{article.excerpt}</p>
                 </div>
             </header>
 
@@ -89,6 +105,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                 fill
                                 priority
                                 className={styles.heroImage}
+                                itemProp="image"
                             />
                         </div>
                     </div>
@@ -98,7 +115,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <div className={styles.contentSection}>
                 <div className={styles.articleContainer}>
                     <div className={styles.layout}>
-                        <div className={styles.content}>
+                        <div className={styles.content} itemProp="articleBody">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
                             </ReactMarkdown>
