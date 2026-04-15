@@ -32,6 +32,7 @@ export default async function RootLayout({
 }>) {
   const content = await getPublicSettings();
   const yandexMetricaId = content.yandexMetricaId;
+  const parsedYandexMetricaId = Number(yandexMetricaId);
   const settings = content.settings;
 
   return (
@@ -48,8 +49,45 @@ export default async function RootLayout({
             "streetAddress": settings.address
           }
         }} />
+        {parsedYandexMetricaId ? (
+          <script
+            id="yandex-metrika"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(m,e,t,r,i,k,a){
+                    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                    m[i].l=1*new Date();
+                    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a);
+                })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=${parsedYandexMetricaId}', 'ym');
+
+                ym(${parsedYandexMetricaId}, 'init', {
+                    ssr:true,
+                    webvisor:true,
+                    clickmap:true,
+                    ecommerce:"dataLayer",
+                    referrer: document.referrer,
+                    url: location.href,
+                    accurateTrackBounce:true,
+                    trackLinks:true
+                });
+              `,
+            }}
+          />
+        ) : null}
       </head>
       <body className={inter.className}>
+        {parsedYandexMetricaId ? (
+          <noscript>
+            <div>
+              <img
+                src={`https://mc.yandex.ru/watch/${parsedYandexMetricaId}`}
+                style={{ position: 'absolute', left: '-9999px' }}
+                alt=""
+              />
+            </div>
+          </noscript>
+        ) : null}
         <Suspense fallback={null}>
           <YandexMetrica counterId={yandexMetricaId} />
         </Suspense>
