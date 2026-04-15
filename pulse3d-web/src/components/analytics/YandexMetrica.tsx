@@ -7,16 +7,17 @@ import Script from 'next/script';
 export default function YandexMetrica({ counterId }: { counterId: string }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const parsedCounterId = Number(counterId);
 
     useEffect(() => {
-        if (!counterId) return;
+        if (!parsedCounterId) return;
 
         if (typeof window.ym !== 'undefined') {
-            window.ym(counterId, 'hit', pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : ''));
+            window.ym(parsedCounterId, 'hit', pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : ''));
         }
-    }, [pathname, searchParams, counterId]);
+    }, [pathname, searchParams, parsedCounterId]);
 
-    if (!counterId) return null;
+    if (!parsedCounterId) return null;
 
     return (
         <>
@@ -26,9 +27,9 @@ export default function YandexMetrica({ counterId }: { counterId: string }) {
           m[i].l=1*new Date();
           for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
           k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-          (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+          (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=${parsedCounterId}", "ym");
 
-          ym(${counterId}, "init", {
+          ym(${parsedCounterId}, "init", {
                ssr:true,
                webvisor:true,
                clickmap:true,
@@ -43,7 +44,7 @@ export default function YandexMetrica({ counterId }: { counterId: string }) {
             <noscript>
                 <div>
                     <img
-                        src={`https://mc.yandex.ru/watch/${counterId}`}
+                        src={`https://mc.yandex.ru/watch/${parsedCounterId}`}
                         style={{ position: 'absolute', left: '-9999px' }}
                         alt=""
                     />
