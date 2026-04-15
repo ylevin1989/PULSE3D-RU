@@ -29,10 +29,14 @@ export default function YandexMetrica({ counterId }: { counterId: string }) {
           (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
           ym(${counterId}, "init", {
+               ssr:true,
+               webvisor:true,
                clickmap:true,
-               trackLinks:true,
+               ecommerce:"dataLayer",
+               referrer: document.referrer,
+               url: location.href,
                accurateTrackBounce:true,
-               webvisor:true
+               trackLinks:true
           });
         `}
             </Script>
