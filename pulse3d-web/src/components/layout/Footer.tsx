@@ -28,10 +28,8 @@ const Footer = () => {
                         <a href={settings.youtubeLink} target="_blank" className={styles.socialIcon} title="YouTube">
                             <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.78-1.78C18.23 5 12 5 12 5s-6.23 0-7.8.41c-.87.24-1.55.92-1.78 1.78C2 8.76 2 12 2 12s0 3.24.42 4.81c.23.86.91 1.54 1.78 1.78C5.77 19 12 19 12 19s6.23 0 7.8-.41c.87-.24 1.55-.92 1.78-1.78C22 15.24 22 12 22 12s0-3.24-.42-4.81zM9.96 14.73V9.27L14.7 12l-4.74 2.73z" /></svg>
                         </a>
-                        <a href={settings.avitoLink} target="_blank" className={styles.socialIcon} title="Avito">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                                <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-.5 15.5c-1.381 0-2.5-1.119-2.5-2.5s1.119-2.5 2.5-2.5 2.5 1.119 2.5 2.5-1.119 2.5-2.5 2.5zm6.5-6c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm-11-2c-.828 0-1.5-.672-1.5-1.5S6.172 6 7 6s1.5.672 1.5 1.5S7.828 9 7 9z" />
-                            </svg>
+                        <a href={settings.maxLink || settings.telegramLink} target="_blank" className={styles.socialIcon} title="MAX">
+                            <Image src="/icons/max-messenger-sign-logo.svg" alt="MAX" width={24} height={24} />
                         </a>
                     </div>
                 </div>

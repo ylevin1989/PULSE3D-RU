@@ -118,9 +118,9 @@ const ContactsClient = () => {
                                 <span>YouTube</span>
                                 <strong>Watch Process</strong>
                             </a>
-                            <a href={settings.avitoLink} target="_blank" className={styles.socialCard}>
-                                <span>Avito</span>
-                                <strong>Our Store</strong>
+                            <a href={settings.maxLink || settings.telegramLink} target="_blank" className={styles.socialCard}>
+                                <span>MAX</span>
+                                <strong>Написать нам</strong>
                             </a>
                         </div>
                     </div>

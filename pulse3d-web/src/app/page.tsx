@@ -41,6 +41,7 @@ export default function Home() {
         },
         sameAs: [
             settings.youtubeLink,
+            settings.maxLink,
             settings.telegramLink,
             settings.telegramChannelLink,
             settings.whatsappLink,

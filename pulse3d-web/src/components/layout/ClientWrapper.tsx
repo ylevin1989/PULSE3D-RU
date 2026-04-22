@@ -40,7 +40,7 @@ export default function ClientWrapper({
             <main>{children}</main>
             <Footer settings={settings} />
             <ContactModal />
-            <TelegramWidget link={settings.telegramLink} />
+            <TelegramWidget link={settings.maxLink || settings.telegramLink} />
         </>
     );
 }

@@ -788,8 +788,8 @@ const AdminPage = () => {
                                         <input value={content.settings.youtubeLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, youtubeLink: e.target.value } })} />
                                     </div>
                                     <div className={styles.field}>
-                                        <label>Ссылка на Avito</label>
-                                        <input value={content.settings.avitoLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, avitoLink: e.target.value } })} />
+                                        <label>Ссылка на MAX</label>
+                                        <input value={content.settings.maxLink || ''} onChange={(e) => setContent({ ...content, settings: { ...content.settings, maxLink: e.target.value } })} />
                                     </div>
                                 </div>
                             </div>
