@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import content from '../data/content.json';
 import blog from '../data/blog.json';
 import { SITE_URL } from '../lib/seo';
+import { buildBlogCategories } from '../lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date();
@@ -42,5 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
     }));
 
-    return [...staticRoutes, ...portfolioRoutes, ...blogRoutes];
+    const categoryRoutes = buildBlogCategories(blog as any[]).map((category) => ({
+        url: `${SITE_URL}/blog/category/${category.slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly' as const,
+        priority: 0.65,
+    }));
+
+    return [...staticRoutes, ...portfolioRoutes, ...categoryRoutes, ...blogRoutes];
 }

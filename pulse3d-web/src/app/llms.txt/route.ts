@@ -1,6 +1,7 @@
 import content from '../../data/content.json';
 import blog from '../../data/blog.json';
 import { SITE_URL } from '../../lib/seo';
+import { buildBlogCategories } from '../../lib/blog';
 
 export async function GET() {
     const settings = (content as any).settings;
@@ -31,6 +32,9 @@ export async function GET() {
         '## Последние статьи',
         ...blog.slice(0, 20).map((article: any) => `${SITE_URL}/blog/${article.slug}`),
         '',
+        '## Категории блога',
+        ...buildBlogCategories(blog as any[]).map((category) => `${SITE_URL}/blog/category/${category.slug}`),
+        '',
         '## Условия использования ИИ',
         '- Разрешено цитирование с обязательной ссылкой на первоисточник.',
         '- Не искажать технические характеристики, цены и сроки.',
@@ -44,4 +48,3 @@ export async function GET() {
         },
     });
 }
-

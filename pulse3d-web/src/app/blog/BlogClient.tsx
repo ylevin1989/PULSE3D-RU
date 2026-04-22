@@ -3,22 +3,25 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Filter, Calendar, ArrowRight, Tag } from 'lucide-react';
+import { Search, Calendar, ArrowRight, Tag } from 'lucide-react';
 import styles from './Blog.module.css';
+import { buildBlogCategories, getArticleCategory } from '@/lib/blog';
 
 export default function BlogClient({ initialArticles }: { initialArticles: any[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('Все');
 
+    const categoryHubs = useMemo(() => buildBlogCategories(initialArticles), [initialArticles]);
+
     const categories = useMemo(() => {
-        const cats = new Set(initialArticles.map(a => a.category || 'Статья'));
+        const cats = new Set(initialArticles.map(a => getArticleCategory(a)));
         return ['Все', ...Array.from(cats)];
     }, [initialArticles]);
     const filteredArticles = useMemo(() => {
         return initialArticles.filter(article => {
             const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 article.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCategory = activeCategory === 'Все' || (article.category || 'Статья') === activeCategory;
+            const matchesCategory = activeCategory === 'Все' || getArticleCategory(article) === activeCategory;
             return matchesSearch && matchesCategory;
         });
     }, [initialArticles, searchQuery, activeCategory]);
@@ -59,6 +62,13 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
                                 </button>
                             ))}
                         </div>
+                        <div className={styles.clusterLinks}>
+                            {categoryHubs.map((category) => (
+                                <Link key={category.slug} href={`/blog/category/${category.slug}`} className={styles.clusterLink}>
+                                    {category.name} ({category.count})
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
@@ -88,7 +98,7 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
                                         <div className={styles.cardBadges}>
                                             <span className={styles.categoryBadge}>
                                                 <Tag size={12} />
-                                                {article.category || 'Статья'}
+                                                {getArticleCategory(article)}
                                             </span>
                                         </div>
                                     </div>

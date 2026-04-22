@@ -1,12 +1,14 @@
-import { getArticleBySlug } from '../../admin/actions';
+import { getArticleBySlug, getArticles } from '../../admin/actions';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Script from 'next/script';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import styles from './Article.module.css';
 import type { Metadata } from 'next';
 import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/seo';
+import { getArticleCategory, getCategorySlug, getRelatedArticles } from '@/lib/blog';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,6 +48,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const { slug } = await params;
     const article = await getArticleBySlug(slug);
     if (!article) notFound();
+    const allArticles = await getArticles();
+    const relatedArticles = getRelatedArticles(allArticles, article.slug, 3);
+    const categoryName = getArticleCategory(article);
+    const categorySlug = getCategorySlug(categoryName);
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -121,7 +127,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <header className={styles.header}>
                 <div className={styles.articleContainer}>
                     <div className={styles.meta}>
-                        <span className={styles.category}>{article.category || 'Статья'}</span>
+                        <Link href={`/blog/category/${categorySlug}`} className={styles.category}>
+                            {categoryName}
+                        </Link>
                         <span className={styles.dot}>•</span>
                         <time
                             className={styles.date}
@@ -164,6 +172,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {article.content}
                             </ReactMarkdown>
+                            {relatedArticles.length > 0 ? (
+                                <section className={styles.relatedSection}>
+                                    <h2 className={styles.relatedTitle}>Похожие статьи</h2>
+                                    <div className={styles.relatedGrid}>
+                                        {relatedArticles.map((related) => (
+                                            <Link key={related.slug} href={`/blog/${related.slug}`} className={styles.relatedCard}>
+                                                <span className={styles.relatedCategory}>{getArticleCategory(related)}</span>
+                                                <h3>{related.title}</h3>
+                                                <p>{related.excerpt}</p>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </section>
+                            ) : null}
                         </div>
 
                         <aside className={styles.sidebar}>
