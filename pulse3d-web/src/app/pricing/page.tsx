@@ -7,6 +7,12 @@ import JsonLd from '@/components/seo/JsonLd';
 export const metadata: Metadata = {
     title: 'Цены на 3D печать в СПб | PULSE 3D',
     description: 'Стоимость серийной 3D-печати и прототипирования. Прозрачное ценообразование и расчет стоимости проекта в течение 10 минут.',
+    alternates: {
+        canonical: '/pricing',
+    },
+    openGraph: {
+        url: '/pricing',
+    },
 };
 
 const PricingPage = () => {

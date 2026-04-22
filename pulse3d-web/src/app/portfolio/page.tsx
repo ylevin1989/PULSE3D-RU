@@ -8,6 +8,12 @@ import JsonLd from '@/components/seo/JsonLd';
 export const metadata: Metadata = {
     title: 'Портфолио и примеры работ | PULSE 3D',
     description: 'Кейсы и примеры выполненных работ по 3D-печати. Изготовление корпусов, прототипов и серийных деталей из различных пластиков.',
+    alternates: {
+        canonical: '/portfolio',
+    },
+    openGraph: {
+        url: '/portfolio',
+    },
 };
 
 const PortfolioPage = () => {

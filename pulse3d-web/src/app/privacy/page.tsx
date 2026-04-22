@@ -4,6 +4,12 @@ import styles from './privacy.module.css';
 export const metadata: Metadata = {
     title: 'Политика конфиденциальности | PULSE 3D',
     description: 'Политика в отношении обработки персональных данных ООО "УНО" (PULSE 3D) в соответствии с законодательством РФ.',
+    alternates: {
+        canonical: '/privacy',
+    },
+    openGraph: {
+        url: '/privacy',
+    },
 };
 
 const PrivacyPage = () => {

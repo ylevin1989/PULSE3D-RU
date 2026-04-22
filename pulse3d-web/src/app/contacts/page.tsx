@@ -6,6 +6,12 @@ import contentData from '../../data/content.json';
 export const metadata: Metadata = {
     title: 'Контакты и адрес в Санкт-Петербурге | PULSE 3D',
     description: 'Свяжитесь с PULSE 3D для заказа 3D-печати. Наш адрес в Санкт-Петербурге, телефон и форма обратной связи для расчета проекта.',
+    alternates: {
+        canonical: '/contacts',
+    },
+    openGraph: {
+        url: '/contacts',
+    },
 };
 
 const ContactsPage = () => {

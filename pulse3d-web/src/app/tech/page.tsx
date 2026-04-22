@@ -7,6 +7,12 @@ import JsonLd from '@/components/seo/JsonLd';
 export const metadata: Metadata = {
     title: 'Оборудование и парк 3D-принтеров | PULSE 3D',
     description: 'Наш парк оборудования для промышленной 3D-печати. Современные скоростные 3D-принтеры Bambu Lab для серийного производства деталей.',
+    alternates: {
+        canonical: '/tech',
+    },
+    openGraph: {
+        url: '/tech',
+    },
 };
 
 const TechPage = () => {

@@ -1,29 +1,46 @@
 import { MetadataRoute } from 'next';
 import content from '../data/content.json';
+import blog from '../data/blog.json';
+import { SITE_URL } from '../lib/seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://pulse3d.ru';
-    const lastModified = new Date();
+    const now = new Date();
 
     const staticRoutes = [
         '',
+        '/about',
+        '/blog',
+        '/contacts',
+        '/merch',
         '/pricing',
+        '/privacy',
         '/tech',
         '/portfolio',
-        '/contacts',
+        '/sitemap.xml',
+        '/robots.txt',
+        '/rss.xml',
+        '/llms.txt',
+        '/ai.txt',
     ].map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified,
+        url: `${SITE_URL}${route}`,
+        lastModified: now,
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : 0.8,
     }));
 
     const portfolioRoutes = content.portfolio.works.map((work: any) => ({
-        url: `${baseUrl}/portfolio/${work.slug}`,
-        lastModified,
+        url: `${SITE_URL}/portfolio/${work.slug}`,
+        lastModified: now,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }));
 
-    return [...staticRoutes, ...portfolioRoutes];
+    const blogRoutes = blog.map((article: any) => ({
+        url: `${SITE_URL}/blog/${article.slug}`,
+        lastModified: new Date(article.updated_at || article.created_at || now),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+    }));
+
+    return [...staticRoutes, ...portfolioRoutes, ...blogRoutes];
 }

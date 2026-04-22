@@ -5,6 +5,12 @@ import styles from './about.module.css';
 export const metadata: Metadata = {
     title: 'О компании | PULSE 3D',
     description: 'Узнайте больше о PULSE 3D — эксперте в области промышленной 3D-печати в Санкт-Петербурге. Наша миссия, ценности и юридическая информация.',
+    alternates: {
+        canonical: '/about',
+    },
+    openGraph: {
+        url: '/about',
+    },
 };
 
 const AboutPage = () => {

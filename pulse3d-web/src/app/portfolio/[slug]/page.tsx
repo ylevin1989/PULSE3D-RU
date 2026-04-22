@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../portfolio.module.css';
 import content from '../../../data/content.json';
+import { absoluteUrl, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
 type Props = {
     params: Promise<{ slug: string }>
@@ -15,14 +16,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     if (!work) return { title: 'Проект не найден' };
 
+    const caseUrl = `/portfolio/${work.slug}`;
+
     return {
-        title: `${work.title} | Кейс PULSE 3D`,
+        title: `${work.title} | Кейс`,
         description: work.desc,
+        alternates: {
+            canonical: caseUrl,
+        },
         openGraph: {
             title: work.title,
             description: work.desc,
-            images: [{ url: work.image }],
-        }
+            url: caseUrl,
+            images: [{ url: absoluteUrl(work.image || DEFAULT_OG_IMAGE) }],
+            type: 'article',
+        },
     };
 }
 
@@ -163,4 +171,3 @@ const CaseDetailPage = async (props: Props) => {
 };
 
 export default CaseDetailPage;
-

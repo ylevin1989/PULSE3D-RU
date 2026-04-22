@@ -6,6 +6,12 @@ import content from '../data/content.json';
 export const metadata: Metadata = {
     title: 'PULSE 3D | Промышленная 3D печать Санкт-Петербург',
     description: 'Серийное производство деталей из пластика и нейлона в Санкт-Петербурге. Парк из 10 скоростных 3D-принтеров Bambu Lab. Высокая точность 0.1 мм.',
+    alternates: {
+        canonical: '/',
+    },
+    openGraph: {
+        url: '/',
+    },
 };
 
 export default function Home() {

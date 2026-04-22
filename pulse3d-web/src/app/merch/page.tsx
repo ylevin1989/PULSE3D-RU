@@ -8,6 +8,12 @@ import { getContent } from '../admin/actions';
 export const metadata: Metadata = {
     title: 'Мерч и Сувениры | PULSE 3D',
     description: 'Брендированная сувенирная продукция и мерч с использованием 3D-печати в Санкт-Петербурге.',
+    alternates: {
+        canonical: '/merch',
+    },
+    openGraph: {
+        url: '/merch',
+    },
 };
 
 export default async function MerchPage() {

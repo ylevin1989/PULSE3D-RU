@@ -7,14 +7,62 @@ import ClientWrapper from "../components/layout/ClientWrapper";
 import YandexMetrica from "../components/analytics/YandexMetrica";
 import { getPublicSettings } from "./admin/actions";
 import JsonLd from "../components/seo/JsonLd";
+import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "../lib/seo";
 
 export const dynamic = "force-dynamic";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "PULSE 3D | Промышленная 3D печать Санкт-Петербург",
-  description: "3D печать в Санкт-Петербурге. Серийное производство деталей из пластика и нейлона. Парк из 10 скоростных 3D-принтеров Bambu Lab.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "PULSE 3D | Промышленная 3D печать Санкт-Петербург",
+    template: "%s | PULSE 3D",
+  },
+  description:
+    "3D печать в Санкт-Петербурге. Серийное производство деталей из пластика и нейлона. Парк из 10 скоростных 3D-принтеров Bambu Lab.",
+  applicationName: SITE_NAME,
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [{ url: "/rss.xml", title: "PULSE 3D Blog RSS" }],
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "PULSE 3D | Промышленная 3D печать Санкт-Петербург",
+    description:
+      "Серийное производство деталей из пластика и нейлона в Санкт-Петербурге. Быстрый расчет и запуск в производство.",
+    images: [
+      {
+        url: absoluteUrl(DEFAULT_OG_IMAGE),
+        width: 1200,
+        height: 630,
+        alt: "PULSE 3D — промышленная 3D-печать",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PULSE 3D | Промышленная 3D печать Санкт-Петербург",
+    description:
+      "Серийное производство деталей из пластика и нейлона. Парк из 10 принтеров Bambu Lab.",
+    images: [absoluteUrl(DEFAULT_OG_IMAGE)],
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -42,6 +90,8 @@ export default async function RootLayout({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           "name": "PULSE 3D",
+          "url": SITE_URL,
+          "logo": absoluteUrl("/icon.png"),
           "telephone": settings.contactPhone,
           "email": settings.contactEmail,
           "address": {
@@ -49,6 +99,19 @@ export default async function RootLayout({
             "streetAddress": settings.address
           }
         }} />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_NAME,
+            url: SITE_URL,
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${SITE_URL}/blog?query={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+          }}
+        />
         {parsedYandexMetricaId ? (
           <script
             id="yandex-metrika"
