@@ -40,16 +40,8 @@ export function trackLeadFormOpen(source: LeadPayload['source']) {
     if (!dl) return;
 
     dl.push({
-        event: 'begin_checkout',
-        ecommerce: {
-            currencyCode: 'RUB',
-            checkout: {
-                actionField: {
-                    step: 1,
-                    option: source,
-                },
-            },
-        },
+        event: 'lead_form_start',
+        lead_source: source,
     });
 }
 
@@ -61,34 +53,11 @@ export function trackLeadSubmit(payload: LeadPayload) {
     const itemName = payload.tariff || 'Заявка на расчет';
 
     dl.push({
-        event: 'generate_lead',
+        event: 'lead_form_submit',
         lead_source: payload.source,
         lead_has_file: Boolean(payload.hasFile),
         lead_tariff: payload.tariff || '',
         lead_value: value,
-    });
-
-    // E-commerce format for Metrika dataLayer integration
-    dl.push({
-        ecommerce: {
-            currencyCode: 'RUB',
-            purchase: {
-                actionField: {
-                    id: `lead_${Date.now()}`,
-                    revenue: value,
-                    affiliation: 'pulse3d.ru',
-                },
-                products: [
-                    {
-                        id: payload.tariff || 'lead_request',
-                        name: itemName,
-                        category: 'lead',
-                        quantity: 1,
-                        price: value,
-                        variant: payload.source,
-                    },
-                ],
-            },
-        },
+        lead_item_name: itemName,
     });
 }
