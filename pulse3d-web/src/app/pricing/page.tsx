@@ -83,7 +83,7 @@ const PricingPage = () => {
                 <div className={styles.extraInfo}>
                     <div className={styles.extraCard}>
                         <span className={styles.extraLabel}>Минимальный заказ</span>
-                        <span className={styles.extraValue}>350 ₽</span>
+                        <span className={styles.extraValue}>от 5 000 ₽</span>
                     </div>
                     <div className={styles.extraCard}>
                         <span className={styles.extraLabel}>Запуск печати</span>
