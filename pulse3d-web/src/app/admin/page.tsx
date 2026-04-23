@@ -6,6 +6,72 @@ import styles from './admin.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const EXPERT_ARTICLE_TEMPLATE = `## Кратко (TL;DR)
+2-4 предложения с главным выводом статьи и практической пользой.
+
+## Что вы узнаете
+- Пункт 1
+- Пункт 2
+- Пункт 3
+
+## Контекст и задача
+Раскройте проблему, кому и почему это важно.
+
+## Методика / критерии сравнения
+Опишите параметры оценки: скорость, качество, стабильность, стоимость, масштабируемость.
+
+## Основная часть
+### 1) Технический разбор
+Факты, метрики, ограничения, применимость.
+
+### 2) Практические сценарии
+Где это применяют на производстве, типовые ошибки, рекомендации.
+
+### 3) Сравнение с альтернативами
+Сильные/слабые стороны и условия выбора.
+
+## FAQ
+#### Вопрос 1?
+Краткий, точный и прикладной ответ.
+
+#### Вопрос 2?
+Краткий, точный и прикладной ответ.
+
+## Вывод
+Что выбрать, когда выбирать, следующий шаг для читателя.
+
+## Экспертные источники
+- [Название источника 1](https://example.com/source-1)
+- [Название источника 2](https://example.com/source-2)
+`;
+
+function analyzeArticleSeo(article: any) {
+    const text = article?.content || '';
+    const excerpt = article?.excerpt || '';
+    const sourceMatches = text.match(/\[[^\]]+\]\((https?:\/\/[^)\s]+)\)/g) || [];
+    const h2Count = (text.match(/^##\s+/gm) || []).length;
+    const faqCount = (text.match(/^####\s+.+\?$/gm) || []).length;
+    const wordCount = text
+        .replace(/[#_*`>\-\[\]\(\)]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean).length;
+
+    const checklist = [
+        { label: 'Объем статьи 1500+ слов', ok: wordCount >= 1500, value: `${wordCount} слов` },
+        { label: 'SEO description 140-170 символов', ok: excerpt.length >= 140 && excerpt.length <= 170, value: `${excerpt.length} симв.` },
+        { label: 'Есть минимум 3 H2-подзаголовка', ok: h2Count >= 3, value: `${h2Count} H2` },
+        { label: 'Есть минимум 2 экспертных источника', ok: sourceMatches.length >= 2, value: `${sourceMatches.length} ссылок` },
+        { label: 'Есть FAQ-блок (минимум 2 вопроса)', ok: faqCount >= 2, value: `${faqCount} вопросов` },
+        { label: 'Есть обложка статьи', ok: Boolean(article?.image_url), value: article?.image_url ? 'Да' : 'Нет' },
+    ];
+
+    return {
+        score: checklist.filter((item) => item.ok).length,
+        maxScore: checklist.length,
+        checklist,
+    };
+}
+
 const AdminPage = () => {
     const [content, setContent] = useState<any>(null);
     const [leads, setLeads] = useState<any[]>([]);
@@ -83,6 +149,17 @@ const AdminPage = () => {
     };
 
     const handleSaveArticle = async (article: any) => {
+        const seo = analyzeArticleSeo(article);
+        const failedItems = seo.checklist.filter((item) => !item.ok);
+        if (failedItems.length > 0) {
+            const proceed = confirm(
+                `SEO-проверка: ${seo.score}/${seo.maxScore}.\\n` +
+                `Не выполнено:\\n- ${failedItems.map((item) => item.label).join('\\n- ')}\\n\\n` +
+                `Сохранить статью всё равно?`
+            );
+            if (!proceed) return;
+        }
+
         setSaving(true);
         const res = await saveArticle(article);
         if (res.success) {
@@ -668,7 +745,20 @@ const AdminPage = () => {
 
                             {editingArticle ? (
                                 <div className={styles.fieldGroup}>
+                                    {(() => {
+                                        const seoReport = analyzeArticleSeo(editingArticle);
+                                        return (
+                                            <>
                                     <h3>{editingArticle.id ? 'Редактирование статьи' : 'Новая статья'}</h3>
+                                    <div className={styles.blogToolsRow}>
+                                        <button
+                                            type="button"
+                                            className="primary-button"
+                                            onClick={() => setEditingArticle({ ...editingArticle, content: editingArticle.content ? `${editingArticle.content}\n\n${EXPERT_ARTICLE_TEMPLATE}` : EXPERT_ARTICLE_TEMPLATE })}
+                                        >
+                                            + Вставить шаблон экспертной статьи
+                                        </button>
+                                    </div>
                                     <div className={styles.field}>
                                         <label>Заголовок статьи</label>
                                         <input
@@ -733,6 +823,20 @@ const AdminPage = () => {
                                     >
                                         {saving ? 'Сохранение...' : 'Опубликовать статью'}
                                     </button>
+                                    <div className={styles.seoChecklist}>
+                                        <h4>SEO/AI чеклист: {seoReport.score}/{seoReport.maxScore}</h4>
+                                        <ul>
+                                            {seoReport.checklist.map((item) => (
+                                                <li key={item.label} className={item.ok ? styles.checkOk : styles.checkFail}>
+                                                    <span>{item.ok ? '✓' : '•'} {item.label}</span>
+                                                    <strong>{item.value}</strong>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             ) : (
                                 <div className={styles.grid}>

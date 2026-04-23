@@ -32,6 +32,39 @@ function extractExternalSources(markdown: string): Array<{ title: string; url: s
     return [...unique.entries()].map(([url, title]) => ({ title, url }));
 }
 
+function extractFaqFromMarkdown(markdown: string): Array<{ question: string; answer: string }> {
+    const lines = markdown.split('\n');
+    const faqs: Array<{ question: string; answer: string }> = [];
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i].trim();
+
+        if (/^####\s+.+\?$/.test(line)) {
+            const question = line.replace(/^####\s+/, '').trim();
+            const answerLines: string[] = [];
+            i += 1;
+
+            while (i < lines.length && !/^#{2,4}\s+/.test(lines[i].trim())) {
+                if (lines[i].trim()) {
+                    answerLines.push(lines[i].trim());
+                }
+                i += 1;
+            }
+
+            const answer = answerLines.join(' ').trim();
+            if (answer) {
+                faqs.push({ question, answer });
+            }
+            continue;
+        }
+
+        i += 1;
+    }
+
+    return faqs;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const article = await getArticleBySlug(slug);
@@ -81,6 +114,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const categoryName = getArticleCategory(article);
     const categorySlug = getCategorySlug(categoryName);
     const sourceLinks = extractExternalSources(article.content || '');
+    const faqItems = extractFaqFromMarkdown(article.content || '');
     const markdownComponents: Components = {
         a: ({ href, children, ...props }) => {
             const url = href || '';
@@ -162,6 +196,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         ],
     };
 
+    const faqData = faqItems.length > 0
+        ? {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: faqItems.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: item.answer,
+                },
+            })),
+        }
+        : null;
+
     return (
         <article
             className={styles.articlePage}
@@ -178,6 +227,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
             />
+            {faqData ? (
+                <Script
+                    id={`faq-ld-json-${article.slug}`}
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqData) }}
+                />
+            ) : null}
             <meta itemProp="author" content="PULSE 3D" />
             <meta itemProp="dateModified" content={article.updated_at || article.created_at} />
             <meta itemProp="mainEntityOfPage" content={absoluteUrl(`/blog/${article.slug}`)} />

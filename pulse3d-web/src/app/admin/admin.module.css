@@ -246,11 +246,71 @@
     font-family: inherit;
 }
 
+.field select {
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f8fafc;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
 .field input:focus,
 .field textarea:focus {
     border-color: var(--color-brand-primary);
     outline: none;
     box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+}
+
+.field select:focus {
+    border-color: var(--color-brand-primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
+}
+
+.blogToolsRow {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.seoChecklist {
+    margin-top: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    background: #f8fafc;
+}
+
+.seoChecklist h4 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.seoChecklist ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.seoChecklist li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.checkOk {
+    color: #166534;
+}
+
+.checkFail {
+    color: #991b1b;
 }
 
 .itemCard {
