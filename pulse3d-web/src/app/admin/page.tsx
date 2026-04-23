@@ -652,7 +652,7 @@ const AdminPage = () => {
                                 {!editingArticle ? (
                                     <button
                                         className="primary-button primary-button--filled"
-                                        onClick={() => setEditingArticle({ title: '', slug: '', content: '', excerpt: '', image_url: '', category: 'Article' })}
+                                        onClick={() => setEditingArticle({ title: '', slug: '', content: '', excerpt: '', image_url: '', category: 'Статья' })}
                                     >
                                         + Написать статью
                                     </button>
@@ -690,9 +690,10 @@ const AdminPage = () => {
                                             onChange={(e) => setEditingArticle({ ...editingArticle, category: e.target.value })}
                                             className={styles.select}
                                         >
-                                            <option value="Article">Статья</option>
-                                            <option value="Tech Doc">Тех. документация</option>
-                                            <option value="News">Новости</option>
+                                            <option value="Статья">Статья</option>
+                                            <option value="Обзор">Обзор</option>
+                                            <option value="Аналитика">Аналитика</option>
+                                            <option value="Технологии">Технологии</option>
                                         </select>
                                     </div>
                                     <ImageField
@@ -708,14 +709,21 @@ const AdminPage = () => {
                                             value={editingArticle.excerpt}
                                             onChange={(e) => setEditingArticle({ ...editingArticle, excerpt: e.target.value })}
                                         />
+                                        <p style={{ fontSize: '12px', color: '#64748b', margin: '6px 0 0' }}>
+                                            Рекомендуемая длина: 140-170 символов.
+                                        </p>
                                     </div>
                                     <div className={styles.field}>
-                                        <label>Контент статьи (Поддерживает HTML)</label>
+                                        <label>Контент статьи (Markdown)</label>
                                         <textarea
                                             rows={15}
                                             value={editingArticle.content}
                                             onChange={(e) => setEditingArticle({ ...editingArticle, content: e.target.value })}
                                         />
+                                        <p style={{ fontSize: '12px', color: '#64748b', margin: '6px 0 0' }}>
+                                            Для экспертных источников добавляйте ссылки в формате: [Название источника](https://example.com).
+                                            В статье такие ссылки автоматически откроются в новом окне и попадут в блок «Экспертные источники».
+                                        </p>
                                     </div>
                                     <button
                                         className="primary-button primary-button--filled"
