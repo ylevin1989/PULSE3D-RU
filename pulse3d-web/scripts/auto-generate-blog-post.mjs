@@ -114,10 +114,14 @@ async function main() {
     return;
   }
 
+  const allowFallbackDraft = process.env.ALLOW_FALLBACK_DRAFT === '1';
   let generated;
   try {
     generated = await generateWithOpenAI(nextTopic);
   } catch (err) {
+    if (!allowFallbackDraft) {
+      throw new Error(`Auto-generation stopped: ${err.message}. Set OPENAI_API_KEY or enable ALLOW_FALLBACK_DRAFT=1`);
+    }
     console.warn(`OpenAI generation failed, using fallback draft: ${err.message}`);
     generated = fallbackDraft(nextTopic);
   }
