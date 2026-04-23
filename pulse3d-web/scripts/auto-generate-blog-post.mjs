@@ -31,7 +31,83 @@ function parseJsonFromText(text) {
   }
 }
 
-function makePrompt(topic) {
+function normalizeInternalPath(url) {
+  if (!url) return null;
+  const clean = String(url).trim();
+  if (!clean || clean.startsWith('#')) return null;
+
+  if (clean.startsWith('/')) {
+    const path = clean.split('#')[0].split('?')[0];
+    return path === '/' ? path : path.replace(/\/+$/, '');
+  }
+
+  if (/^https?:\/\//i.test(clean)) {
+    try {
+      const parsed = new URL(clean);
+      const host = parsed.hostname.replace(/^www\./, '');
+      if (host !== 'pulse3d.ru') return null;
+      const path = (parsed.pathname || '/').split('#')[0].split('?')[0];
+      return path === '/' ? path : path.replace(/\/+$/, '');
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+}
+
+function buildAllowedInternalLinks(blog) {
+  const staticPaths = [
+    '/',
+    '/pricing',
+    '/tech',
+    '/portfolio',
+    '/blog',
+    '/merch',
+    '/about',
+    '/contacts',
+    '/privacy',
+  ];
+  const blogPaths = blog.map((item) => `/blog/${item.slug}`);
+  const all = [...new Set([...staticPaths, ...blogPaths])];
+  return all.sort();
+}
+
+function sanitizeInternalLinks(content, allowedInternalSet) {
+  if (!content) return content;
+
+  const aliases = new Map([
+    ['/blog/sebestoimost-partii', '/blog/stoimost-3d-pechati-v-2026'],
+    ['/blog/zagruzka-parka', '/tech'],
+  ]);
+
+  return content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (full, text, href) => {
+    const internalPath = normalizeInternalPath(href);
+    if (!internalPath) return full;
+
+    const mapped = aliases.get(internalPath) || internalPath;
+    if (allowedInternalSet.has(mapped)) {
+      return `[${text}](${mapped})`;
+    }
+
+    // If target does not exist on the site, keep text but drop link.
+    return text;
+  });
+}
+
+function countValidInternalLinks(content, allowedInternalSet) {
+  const matches = [...String(content || '').matchAll(/\[[^\]]+\]\(([^)]+)\)/g)];
+  let count = 0;
+  for (const m of matches) {
+    const path = normalizeInternalPath(m[1]);
+    if (path && allowedInternalSet.has(path)) count += 1;
+  }
+  return count;
+}
+
+function makePrompt(topic, allowedInternalLinks) {
+  const linksBlock = allowedInternalLinks.map((link) => `- ${link}`).join('\n');
+
   return `Ты пишешь экспертную статью для сайта PULSE3D (B2B, промышленная 3D-печать).
 
 Тема: ${topic.title}
@@ -47,7 +123,8 @@ Slug: ${topic.slug}
 4) Структура:
 - "## Кратко (TL;DR)"
 - минимум 4 раздела H2
-- внутренние ссылки минимум 2 в формате /blog/slug
+- внутренние ссылки минимум 2 только из разрешенного списка ниже:
+${linksBlock}
 - "## FAQ" с минимум 3 вопросами формата "#### Вопрос?"
 - "## Вывод"
 - "## Экспертные источники" минимум 3 ссылки в Markdown: [Название](https://...)
@@ -62,7 +139,7 @@ Slug: ${topic.slug}
 }`;
 }
 
-async function generateWithOpenAI(topic) {
+async function generateWithOpenAI(topic, allowedInternalLinks) {
   const openRouterKey = process.env.OPENROUTER_API_KEY;
   const openAiKey = process.env.OPENAI_API_KEY;
   const usingOpenRouter = Boolean(openRouterKey);
@@ -84,7 +161,7 @@ async function generateWithOpenAI(topic) {
     model,
     messages: [
       { role: 'system', content: 'Ты экспертный технический редактор. Возвращай только валидный JSON, без Markdown-оберток.' },
-      { role: 'user', content: makePrompt(topic) },
+      { role: 'user', content: makePrompt(topic, allowedInternalLinks) },
     ],
     temperature: 0.4,
     response_format: { type: 'json_object' },
@@ -141,6 +218,8 @@ function validateArticle(article) {
 async function main() {
   const blog = await readJson(BLOG_PATH);
   const queue = await readJson(QUEUE_PATH);
+  const allowedInternalLinks = buildAllowedInternalLinks(blog);
+  const allowedInternalSet = new Set(allowedInternalLinks);
 
   const existing = new Set(blog.map((item) => item.slug));
   const nextTopic = queue.find((item) => !existing.has(item.slug));
@@ -153,7 +232,7 @@ async function main() {
   const allowFallbackDraft = process.env.ALLOW_FALLBACK_DRAFT === '1';
   let generated;
   try {
-    generated = await generateWithOpenAI(nextTopic);
+    generated = await generateWithOpenAI(nextTopic, allowedInternalLinks);
   } catch (err) {
     if (!allowFallbackDraft) {
       throw new Error(`Auto-generation stopped: ${err.message}. Set OPENROUTER_API_KEY/OPENAI_API_KEY or enable ALLOW_FALLBACK_DRAFT=1`);
@@ -165,6 +244,15 @@ async function main() {
   if (!validateArticle(generated)) {
     console.warn('Generated article did not pass strict validation, applying fallback draft template');
     generated = fallbackDraft(nextTopic);
+  }
+
+  generated.content = sanitizeInternalLinks(generated.content, allowedInternalSet);
+  const internalLinksCount = countValidInternalLinks(generated.content, allowedInternalSet);
+  if (internalLinksCount < 2) {
+    console.warn(`Generated article contains only ${internalLinksCount} valid internal links, adding safe defaults`);
+    generated.content += '\n\n## Полезные материалы\n'
+      + '- [Цены на 3D-печать](/pricing)\n'
+      + '- [Блог PULSE3D](/blog)\n';
   }
 
   const now = new Date().toISOString();

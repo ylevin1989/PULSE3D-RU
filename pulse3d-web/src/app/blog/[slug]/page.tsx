@@ -17,6 +17,32 @@ function isExternalUrl(url: string): boolean {
     return /^https?:\/\//i.test(url) && !url.includes('pulse3d.ru');
 }
 
+function normalizeInternalPath(url: string): string | null {
+    if (!url) return null;
+    if (url.startsWith('#')) return null;
+
+    try {
+        if (url.startsWith('/')) {
+            const path = url.split('#')[0].split('?')[0].trim();
+            if (!path) return null;
+            return path === '/' ? path : path.replace(/\/+$/, '');
+        }
+
+        if (/^https?:\/\//i.test(url)) {
+            const parsed = new URL(url);
+            const host = parsed.hostname.replace(/^www\./, '');
+            if (host !== 'pulse3d.ru') return null;
+            const path = parsed.pathname.trim();
+            if (!path) return '/';
+            return path === '/' ? path : path.replace(/\/+$/, '');
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+}
+
 function extractExternalSources(markdown: string): Array<{ title: string; url: string }> {
     const pattern = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
     const unique = new Map<string, string>();
@@ -24,7 +50,7 @@ function extractExternalSources(markdown: string): Array<{ title: string; url: s
     let match;
     while ((match = pattern.exec(markdown)) !== null) {
         const [, title, url] = match;
-        if (!unique.has(url)) {
+        if (isExternalUrl(url) && !unique.has(url)) {
             unique.set(url, title.trim());
         }
     }
@@ -111,6 +137,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     if (!article) notFound();
     const allArticles = await getArticles();
     const relatedArticles = getRelatedArticles(allArticles, article.slug, 3);
+    const validInternalPaths = new Set<string>([
+        '/',
+        '/pricing',
+        '/tech',
+        '/portfolio',
+        '/blog',
+        '/merch',
+        '/about',
+        '/contacts',
+        '/privacy',
+        ...allArticles.map((item) => `/blog/${item.slug}`),
+        ...allArticles.map((item) => `/blog/category/${getCategorySlug(getArticleCategory(item))}`),
+    ]);
     const categoryName = getArticleCategory(article);
     const categorySlug = getCategorySlug(categoryName);
     const sourceLinks = extractExternalSources(article.content || '');
@@ -118,6 +157,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const markdownComponents: Components = {
         a: ({ href, children, ...props }) => {
             const url = href || '';
+            const internalPath = normalizeInternalPath(url);
+
+            if (internalPath) {
+                if (validInternalPaths.has(internalPath)) {
+                    return (
+                        <Link href={internalPath} className={styles.articleLink}>
+                            {children}
+                        </Link>
+                    );
+                }
+
+                return <span className={styles.articleLink}>{children}</span>;
+            }
+
             const external = isExternalUrl(url);
 
             return (
