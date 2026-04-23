@@ -6,7 +6,7 @@
 - `scripts/install-blog-cron.sh` — установка cron-задачи на сервере (вт/чт 10:00 MSK).
 
 ## Режимы работы
-1. С `OPENAI_API_KEY`:
+1. С `OPENROUTER_API_KEY` (рекомендуется) или `OPENAI_API_KEY`:
 - скрипт генерирует полноценную экспертную статью через API,
 - сохраняет в `src/data/blog.json`,
 - после этого пересобирается приложение.
@@ -17,13 +17,13 @@
 
 ## Настройка ключа на VPS
 1. В директории проекта создать файл `.env.blog` на основе `.env.blog.example`.
-2. Заполнить `OPENAI_API_KEY`.
+2. Заполнить `OPENROUTER_API_KEY` (или `OPENAI_API_KEY` как альтернативу).
 3. Переустановить cron: `npm run blog:cron:install`.
 
 Пример `.env.blog`:\n
 ```bash
-OPENAI_API_KEY=sk-...
-OPENAI_MODEL=gpt-5-mini
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=openai/gpt-4o-mini
 ALLOW_FALLBACK_DRAFT=0
 ```
 

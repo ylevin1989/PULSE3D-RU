@@ -15,6 +15,22 @@ async function writeJson(filePath, data) {
   await fs.writeFile(filePath, `${JSON.stringify(data, null, 4)}\n`, 'utf8');
 }
 
+function parseJsonFromText(text) {
+  const clean = (text || '').trim();
+  if (!clean) throw new Error('LLM returned empty text');
+
+  try {
+    return JSON.parse(clean);
+  } catch {
+    const start = clean.indexOf('{');
+    const end = clean.lastIndexOf('}');
+    if (start !== -1 && end !== -1 && end > start) {
+      return JSON.parse(clean.slice(start, end + 1));
+    }
+    throw new Error('Could not parse JSON from LLM response');
+  }
+}
+
 function makePrompt(topic) {
   return `Ты пишешь экспертную статью для сайта PULSE3D (B2B, промышленная 3D-печать).
 
@@ -47,37 +63,57 @@ Slug: ${topic.slug}
 }
 
 async function generateWithOpenAI(topic) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error('OPENAI_API_KEY is not set');
+  const openRouterKey = process.env.OPENROUTER_API_KEY;
+  const openAiKey = process.env.OPENAI_API_KEY;
+  const usingOpenRouter = Boolean(openRouterKey);
+  const apiKey = openRouterKey || openAiKey;
 
-  const model = process.env.OPENAI_MODEL || 'gpt-5-mini';
+  if (!apiKey) {
+    throw new Error('Neither OPENROUTER_API_KEY nor OPENAI_API_KEY is set');
+  }
+
+  const endpoint = usingOpenRouter
+    ? 'https://openrouter.ai/api/v1/chat/completions'
+    : 'https://api.openai.com/v1/chat/completions';
+
+  const model = usingOpenRouter
+    ? (process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini')
+    : (process.env.OPENAI_MODEL || 'gpt-4o-mini');
+
   const body = {
     model,
-    input: makePrompt(topic),
-    text: { format: { type: 'json_object' } },
+    messages: [
+      { role: 'system', content: 'Ты экспертный технический редактор. Возвращай только валидный JSON, без Markdown-оберток.' },
+      { role: 'user', content: makePrompt(topic) },
+    ],
+    temperature: 0.4,
+    response_format: { type: 'json_object' },
   };
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  };
+
+  if (usingOpenRouter) {
+    headers['HTTP-Referer'] = 'https://pulse3d.ru';
+    headers['X-Title'] = 'PULSE3D Blog Autogen';
+  }
+
+  const response = await fetch(endpoint, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
+    headers,
     body: JSON.stringify(body),
   });
 
   if (!response.ok) {
     const text = await response.text();
-    throw new Error(`OpenAI API error: ${response.status} ${text}`);
+    throw new Error(`LLM API error: ${response.status} ${text}`);
   }
 
   const data = await response.json();
-  const outputText = data?.output_text;
-  if (!outputText) {
-    throw new Error('OpenAI response has no output_text');
-  }
-
-  const parsed = JSON.parse(outputText);
+  const outputText = data?.choices?.[0]?.message?.content || '';
+  const parsed = parseJsonFromText(outputText);
   return {
     title: parsed.title?.trim() || topic.title,
     excerpt: (parsed.excerpt || topic.description || '').trim().slice(0, 170),
@@ -120,7 +156,7 @@ async function main() {
     generated = await generateWithOpenAI(nextTopic);
   } catch (err) {
     if (!allowFallbackDraft) {
-      throw new Error(`Auto-generation stopped: ${err.message}. Set OPENAI_API_KEY or enable ALLOW_FALLBACK_DRAFT=1`);
+      throw new Error(`Auto-generation stopped: ${err.message}. Set OPENROUTER_API_KEY/OPENAI_API_KEY or enable ALLOW_FALLBACK_DRAFT=1`);
     }
     console.warn(`OpenAI generation failed, using fallback draft: ${err.message}`);
     generated = fallbackDraft(nextTopic);
