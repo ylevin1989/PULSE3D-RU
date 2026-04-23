@@ -149,6 +149,16 @@
     font-weight: 700;
 }
 
+.articleLink {
+    color: #1d4ed8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.articleLink:hover {
+    color: #1e40af;
+}
+
 .content ul {
     margin: 24px 0 32px;
     padding-left: 0;
@@ -244,6 +254,39 @@
     background: #2563eb;
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.sourcesSection {
+    margin-top: 42px;
+    padding-top: 28px;
+    border-top: 1px dashed #cbd5e1;
+}
+
+.sourcesTitle {
+    margin-bottom: 16px !important;
+}
+
+.sourcesList {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 10px;
+}
+
+.sourcesList li {
+    padding-left: 0;
+    margin: 0;
+    font-size: 15px;
+}
+
+.sourcesList li::before {
+    display: none;
+}
+
+.sourcesList a {
+    color: #1d4ed8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .relatedSection {

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Script from 'next/script';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import type { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import styles from './Article.module.css';
 import type { Metadata } from 'next';
@@ -11,6 +12,25 @@ import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/seo';
 import { getArticleCategory, getCategorySlug, getRelatedArticles } from '@/lib/blog';
 
 export const dynamic = 'force-dynamic';
+
+function isExternalUrl(url: string): boolean {
+    return /^https?:\/\//i.test(url) && !url.includes('pulse3d.ru');
+}
+
+function extractExternalSources(markdown: string): Array<{ title: string; url: string }> {
+    const pattern = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+    const unique = new Map<string, string>();
+
+    let match;
+    while ((match = pattern.exec(markdown)) !== null) {
+        const [, title, url] = match;
+        if (!unique.has(url)) {
+            unique.set(url, title.trim());
+        }
+    }
+
+    return [...unique.entries()].map(([url, title]) => ({ title, url }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -41,6 +61,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             description: article.excerpt,
             images: [image],
         },
+        keywords: [
+            '3D-печать',
+            'промышленная 3D-печать',
+            'аддитивное производство',
+            'серийная печать',
+            getArticleCategory(article),
+            article.title,
+        ],
     };
 }
 
@@ -52,6 +80,25 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const relatedArticles = getRelatedArticles(allArticles, article.slug, 3);
     const categoryName = getArticleCategory(article);
     const categorySlug = getCategorySlug(categoryName);
+    const sourceLinks = extractExternalSources(article.content || '');
+    const markdownComponents: Components = {
+        a: ({ href, children, ...props }) => {
+            const url = href || '';
+            const external = isExternalUrl(url);
+
+            return (
+                <a
+                    href={url}
+                    {...props}
+                    className={styles.articleLink}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noopener noreferrer nofollow' : undefined}
+                >
+                    {children}
+                </a>
+            );
+        },
+    };
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -77,7 +124,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": absoluteUrl(`/blog/${article.slug}`)
-        }
+        },
+        "articleSection": categoryName,
+        "inLanguage": "ru-RU",
+        "isAccessibleForFree": true,
+        "citation": sourceLinks.map((source) => source.url),
+        "keywords": [
+            "3D-печать",
+            "аддитивное производство",
+            categoryName,
+            article.title,
+        ].join(', ')
     };
 
     const breadcrumbData = {
@@ -169,9 +226,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <div className={styles.articleContainer}>
                     <div className={styles.layout}>
                         <div className={styles.content} itemProp="articleBody">
-                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                                 {article.content}
                             </ReactMarkdown>
+                            {sourceLinks.length > 0 ? (
+                                <section className={styles.sourcesSection}>
+                                    <h2 className={styles.sourcesTitle}>Экспертные источники</h2>
+                                    <ul className={styles.sourcesList}>
+                                        {sourceLinks.map((source) => (
+                                            <li key={source.url}>
+                                                <a href={source.url} target="_blank" rel="noopener noreferrer nofollow">
+                                                    {source.title}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            ) : null}
                             {relatedArticles.length > 0 ? (
                                 <section className={styles.relatedSection}>
                                     <h2 className={styles.relatedTitle}>Похожие статьи</h2>
