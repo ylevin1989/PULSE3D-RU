@@ -21,6 +21,7 @@ async function getDataTimestamp(): Promise<Date> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const dataTimestamp = await getDataTimestamp();
+    const now = new Date();
 
     const staticRoutes = [
         '',
@@ -39,14 +40,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/ai.txt',
     ].map((route) => ({
         url: `${SITE_URL}${route}`,
-        lastModified: dataTimestamp,
+        lastModified: now,
         changeFrequency: 'weekly' as const,
         priority: route === '' ? 1 : 0.8,
     }));
 
     const portfolioRoutes = content.portfolio.works.map((work: any) => ({
         url: `${SITE_URL}/portfolio/${work.slug}`,
-        lastModified: dataTimestamp,
+        lastModified: now,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }));
