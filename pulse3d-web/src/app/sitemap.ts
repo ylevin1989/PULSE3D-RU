@@ -2,9 +2,13 @@ import { MetadataRoute } from 'next';
 import content from '../data/content.json';
 import blog from '../data/blog.json';
 import { SITE_URL } from '../lib/seo';
-import { buildBlogCategories, getArticleCategory } from '../lib/blog';
+import { buildBlogCategories, getArticleCategory, type BlogArticle } from '../lib/blog';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
+
+type PortfolioWork = {
+    slug: string;
+};
 
 async function getDataTimestamp(): Promise<Date> {
     try {
@@ -33,8 +37,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/privacy',
         '/tech',
         '/portfolio',
-        '/sitemap.xml',
-        '/robots.txt',
         '/rss.xml',
         '/llms.txt',
         '/ai.txt',
@@ -45,22 +47,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: route === '' ? 1 : 0.8,
     }));
 
-    const portfolioRoutes = content.portfolio.works.map((work: any) => ({
+    const portfolioRoutes = (content.portfolio.works as PortfolioWork[]).map((work) => ({
         url: `${SITE_URL}/portfolio/${work.slug}`,
         lastModified: now,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
     }));
 
-    const blogRoutes = blog.map((article: any) => ({
+    const blogArticles = blog as BlogArticle[];
+
+    const blogRoutes = blogArticles.map((article) => ({
         url: `${SITE_URL}/blog/${article.slug}`,
         lastModified: new Date(article.updated_at || article.created_at || dataTimestamp),
         changeFrequency: 'weekly' as const,
         priority: 0.7,
     }));
 
-    const categoryRoutes = buildBlogCategories(blog as any[]).map((category) => {
-        const latestInCategory = (blog as any[])
+    const categoryRoutes = buildBlogCategories(blogArticles).map((category) => {
+        const latestInCategory = blogArticles
             .filter((article) => getArticleCategory(article) === category.name)
             .map((article) => new Date(article.updated_at || article.created_at || dataTimestamp).getTime())
             .sort((a, b) => b - a)[0];

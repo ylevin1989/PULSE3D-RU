@@ -9,7 +9,8 @@ import remarkGfm from 'remark-gfm';
 import styles from './Article.module.css';
 import type { Metadata } from 'next';
 import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from '@/lib/seo';
-import { getArticleCategory, getCategorySlug, getRelatedArticles } from '@/lib/blog';
+import { getArticleCategory, getCategorySlug, getRelatedArticles, type BlogArticle } from '@/lib/blog';
+import { getCrossClusterLinks } from '@/lib/blog-seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -133,9 +134,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const article = await getArticleBySlug(slug);
+    const article = (await getArticleBySlug(slug)) as BlogArticle | null;
     if (!article) notFound();
-    const allArticles = await getArticles();
+    const allArticles = (await getArticles()) as BlogArticle[];
     const relatedArticles = getRelatedArticles(allArticles, article.slug, 3);
     const validInternalPaths = new Set<string>([
         '/',
@@ -152,6 +153,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     ]);
     const categoryName = getArticleCategory(article);
     const categorySlug = getCategorySlug(categoryName);
+    const crossClusterLinks = getCrossClusterLinks(allArticles, categoryName, 2);
     const sourceLinks = extractExternalSources(article.content || '');
     const faqItems = extractFaqFromMarkdown(article.content || '');
     const markdownComponents: Components = {
@@ -243,6 +245,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {
                 "@type": "ListItem",
                 position: 3,
+                name: categoryName,
+                item: absoluteUrl(`/blog/category/${categorySlug}`),
+            },
+            {
+                "@type": "ListItem",
+                position: 4,
                 name: article.title,
                 item: absoluteUrl(`/blog/${article.slug}`),
             },
@@ -292,6 +300,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <meta itemProp="mainEntityOfPage" content={absoluteUrl(`/blog/${article.slug}`)} />
             <header className={styles.header}>
                 <div className={styles.articleContainer}>
+                    <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
+                        <Link href="/">Главная</Link>
+                        <span>/</span>
+                        <Link href="/blog">Блог</Link>
+                        <span>/</span>
+                        <Link href={`/blog/category/${categorySlug}`}>{categoryName}</Link>
+                        <span>/</span>
+                        <span>{article.title}</span>
+                    </nav>
                     <div className={styles.meta}>
                         <Link href={`/blog/category/${categorySlug}`} className={styles.category}>
                             {categoryName}
@@ -299,10 +316,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <span className={styles.dot}>•</span>
                         <time
                             className={styles.date}
-                            dateTime={article.created_at || new Date().toISOString()}
+                            dateTime={article.created_at || '1970-01-01T00:00:00.000Z'}
                             itemProp="datePublished"
                         >
-                            {new Date(article.created_at || Date.now()).toLocaleDateString('ru-RU', {
+                            {new Date(article.created_at || '1970-01-01T00:00:00.000Z').toLocaleDateString('ru-RU', {
                                 day: 'numeric',
                                 month: 'long',
                                 year: 'numeric'
@@ -361,6 +378,24 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                                 <span className={styles.relatedCategory}>{getArticleCategory(related)}</span>
                                                 <h3>{related.title}</h3>
                                                 <p>{related.excerpt}</p>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </section>
+                            ) : null}
+                            {crossClusterLinks.length > 0 ? (
+                                <section className={styles.relatedSection}>
+                                    <h2 className={styles.relatedTitle}>Смежные темы</h2>
+                                    <div className={styles.relatedGrid}>
+                                        {crossClusterLinks.map((cluster) => (
+                                            <Link
+                                                key={cluster.slug}
+                                                href={`/blog/category/${cluster.slug}`}
+                                                className={styles.relatedCard}
+                                            >
+                                                <span className={styles.relatedCategory}>Кластер</span>
+                                                <h3>{cluster.category}</h3>
+                                                <p>{cluster.intent}</p>
                                             </Link>
                                         ))}
                                     </div>

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { getArticles } from '../admin/actions';
 import BlogClient from './BlogClient';
-import { absoluteUrl, DEFAULT_OG_IMAGE } from '@/lib/seo';
+import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/seo';
 import JsonLd from '@/components/seo/JsonLd';
+import type { BlogArticle } from '@/lib/blog';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-    const articles = await getArticles();
+    const articles = (await getArticles()) as BlogArticle[];
     const itemListData = {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
@@ -30,7 +31,7 @@ export default async function BlogPage() {
         description: 'База знаний и статьи о промышленной 3D-печати.',
         mainEntity: {
             '@type': 'ItemList',
-            itemListElement: articles.map((article: any, index: number) => ({
+            itemListElement: articles.map((article, index: number) => ({
                 '@type': 'ListItem',
                 position: index + 1,
                 url: absoluteUrl(`/blog/${article.slug}`),
@@ -39,9 +40,29 @@ export default async function BlogPage() {
         },
     };
 
+    const breadcrumbData = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Главная',
+                item: SITE_URL,
+            },
+            {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Блог',
+                item: absoluteUrl('/blog'),
+            },
+        ],
+    };
+
     return (
         <>
             <JsonLd data={itemListData} />
+            <JsonLd data={breadcrumbData} />
             <BlogClient initialArticles={articles} />
         </>
     );

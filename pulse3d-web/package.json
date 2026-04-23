@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "blog:auto": "node scripts/auto-generate-blog-post.mjs",
     "blog:cron:install": "bash scripts/install-blog-cron.sh"
   },

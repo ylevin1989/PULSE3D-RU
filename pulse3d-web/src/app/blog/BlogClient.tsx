@@ -5,18 +5,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Calendar, ArrowRight, Tag } from 'lucide-react';
 import styles from './Blog.module.css';
-import { buildBlogCategories, getArticleCategory } from '@/lib/blog';
+import { getArticleCategory, type BlogArticle } from '@/lib/blog';
+import { buildClustersFromArticles } from '@/lib/blog-seo';
 
-export default function BlogClient({ initialArticles }: { initialArticles: any[] }) {
+export default function BlogClient({ initialArticles }: { initialArticles: BlogArticle[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('Все');
 
-    const categoryHubs = useMemo(() => buildBlogCategories(initialArticles), [initialArticles]);
+    const categoryHubs = useMemo(() => buildClustersFromArticles(initialArticles), [initialArticles]);
 
     const categories = useMemo(() => {
-        const cats = new Set(initialArticles.map(a => getArticleCategory(a)));
+        const cats = new Set(initialArticles.map((article) => getArticleCategory(article)));
         return ['Все', ...Array.from(cats)];
     }, [initialArticles]);
+
     const filteredArticles = useMemo(() => {
         return initialArticles.filter(article => {
             const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -63,12 +65,34 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
                             ))}
                         </div>
                         <div className={styles.clusterLinks}>
-                            {categoryHubs.map((category) => (
-                                <Link key={category.slug} href={`/blog/category/${category.slug}`} className={styles.clusterLink}>
-                                    {category.name} ({category.count})
+                            {categoryHubs.map((cluster) => (
+                                <Link key={cluster.slug} href={`/blog/category/${cluster.slug}`} className={styles.clusterLink}>
+                                    {cluster.category}
                                 </Link>
                             ))}
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className={styles.clusterSection}>
+                <div className={styles.articlesContainer}>
+                    <h2 className={styles.clusterHeading}>SEO-кластеры запросов</h2>
+                    <div className={styles.clusterGrid}>
+                        {categoryHubs.map((cluster) => (
+                            <article key={cluster.slug} className={styles.clusterCard}>
+                                <Link href={`/blog/category/${cluster.slug}`} className={styles.clusterCardTitle}>
+                                    {cluster.category}
+                                </Link>
+                                <p className={styles.clusterIntent}>{cluster.intent}</p>
+                                <p className={styles.clusterDescription}>{cluster.hubDescription}</p>
+                                <ul className={styles.clusterQueryList}>
+                                    {cluster.primaryQueries.slice(0, 3).map((query) => (
+                                        <li key={query}>{query}</li>
+                                    ))}
+                                </ul>
+                            </article>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -77,7 +101,7 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
                 <div className={styles.articlesContainer}>
                     {filteredArticles.length > 0 ? (
                         <div className={styles.bentoGrid}>
-                            {filteredArticles.map((article: any, index: number) => (
+                            {filteredArticles.map((article, index) => (
                                 <Link
                                     key={article.id}
                                     href={`/blog/${article.slug}`}
@@ -106,7 +130,7 @@ export default function BlogClient({ initialArticles }: { initialArticles: any[]
                                         <div className={styles.meta}>
                                             <span className={styles.date}>
                                                 <Calendar size={14} />
-                                                {new Date(article.created_at || Date.now()).toLocaleDateString('ru-RU', {
+                                                {new Date(article.created_at || '1970-01-01T00:00:00.000Z').toLocaleDateString('ru-RU', {
                                                     day: 'numeric',
                                                     month: 'long',
                                                     year: 'numeric'
