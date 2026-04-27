@@ -213,7 +213,7 @@
         "buildVolume": "425 x 425 x 550 мм",
         "layerThickness": "0.02 – 0.1 мм",
         "performance": "до 150 см3/ч",
-        "image": "/printer_business.png"
+        "image": "/images/equipment/farsoon-fs422m-h-4.jpg"
       },
       {
         "name": "AM.TECH MBJ-500 Pro",
@@ -225,7 +225,7 @@
         "buildVolume": "500 x 450 x 400 мм",
         "layerThickness": "0.03 – 0.2 мм",
         "performance": "7 – 25 с/слой, 600 DPI",
-        "image": "/auto_parts_business.png"
+        "image": "/images/equipment/am-tech-mbj-500-pro.jpg"
       },
       {
         "name": "TPM S-600",
@@ -237,7 +237,7 @@
         "buildVolume": "600 x 600 x 800 мм",
         "layerThickness": "0.06 – 0.3 мм",
         "performance": "2 x 140W, до 25 мм/сек",
-        "image": "/gear_business.png"
+        "image": "/images/equipment/tpm-s-600.jpg"
       },
       {
         "name": "F2 Gigantry Custom",
@@ -249,7 +249,7 @@
         "buildVolume": "4000 x 1800 x 1500 мм",
         "layerThickness": "1 – 6 мм",
         "performance": "до 10 кг/час",
-        "image": "/about_hero.png"
+        "image": "/images/equipment/f2-gigantry-custom.jpg"
       },
       {
         "name": "F2 Lite 100",
@@ -261,7 +261,7 @@
         "buildVolume": "450 x 350 x 600 мм",
         "layerThickness": "0.1 – 0.4 мм",
         "performance": "производственный режим под малые серии",
-        "image": "/printer_h2s.png"
+        "image": "/images/equipment/f2-lite-100.jpg"
       },
       {
         "name": "Stereotech 530 Fiber",
@@ -273,7 +273,7 @@
         "buildVolume": "300 x 300 x 300 мм (3D), 300 x 300 x 230 мм (5D)",
         "layerThickness": "зависит от стратегии армирования",
         "performance": "прочность до +400% относительно базовой печати",
-        "image": "/auto_parts_business.png"
+        "image": "/images/equipment/stereotech-530-fiber.jpg"
       },
       {
         "name": "R-2000",
@@ -285,7 +285,7 @@
         "buildVolume": "2000 x 1000 x 1000 мм",
         "layerThickness": "0.2 – 0.5 мм",
         "performance": "точность 0.16 – 0.3 мм",
-        "image": "/about_hero.png"
+        "image": "/images/equipment/r-2000.jpg"
       },
       {
         "name": "Bambu Lab Industrial Fleet",
