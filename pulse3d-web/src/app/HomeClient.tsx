@@ -84,22 +84,24 @@ export default function HomeClient() {
             {home.newCapabilities ? (
                 <section className={styles.capabilitiesSection}>
                     <div className={styles.capabilitiesCard}>
-                        <div className={styles.capabilitiesHeader}>
-                            <span className={styles.capabilitiesBadge}>{home.newCapabilities.badge}</span>
-                            <h2 className={styles.capabilitiesTitle}>{home.newCapabilities.title}</h2>
-                            <p className={styles.capabilitiesDesc}>{home.newCapabilities.description}</p>
+                        <div className={styles.capabilitiesLeft}>
+                            <div className={styles.capabilitiesHeader}>
+                                <span className={styles.capabilitiesBadge}>{home.newCapabilities.badge}</span>
+                                <h2 className={styles.capabilitiesTitle}>{home.newCapabilities.title}</h2>
+                                <p className={styles.capabilitiesDesc}>{home.newCapabilities.description}</p>
+                            </div>
+                            <div className={styles.capabilitiesActions}>
+                                <button onClick={() => openModal()} className="primary-button primary-button--filled">
+                                    {home.newCapabilities.ctaText || 'Обсудить проект'}
+                                </button>
+                                <p className={styles.capabilitiesNote}>{home.newCapabilities.ctaNote}</p>
+                            </div>
                         </div>
                         <ul className={styles.capabilitiesList}>
                             {home.newCapabilities.items?.map((item: string, idx: number) => (
                                 <li key={idx}>{item}</li>
                             ))}
                         </ul>
-                        <div className={styles.capabilitiesActions}>
-                            <button onClick={() => openModal()} className="primary-button primary-button--filled">
-                                {home.newCapabilities.ctaText || 'Обсудить проект'}
-                            </button>
-                            <p className={styles.capabilitiesNote}>{home.newCapabilities.ctaNote}</p>
-                        </div>
                     </div>
                 </section>
             ) : null}

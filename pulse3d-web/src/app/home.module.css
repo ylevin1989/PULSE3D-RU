@@ -189,6 +189,13 @@
     gap: 36px;
 }
 
+.capabilitiesLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-self: start;
+}
+
 .capabilitiesHeader {
     display: flex;
     flex-direction: column;
