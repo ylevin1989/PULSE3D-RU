@@ -6,13 +6,28 @@ import styles from '../portfolio.module.css';
 import content from '../../../data/content.json';
 import { absoluteUrl, DEFAULT_OG_IMAGE } from '@/lib/seo';
 
+type PortfolioWork = {
+    slug: string;
+    title: string;
+    material: string;
+    image?: string;
+    desc: string;
+    details?: string[];
+    technology?: string;
+    equipment?: string;
+    quality?: string;
+    warranty?: string;
+    leadTime?: string;
+};
+
 type Props = {
     params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
-    const work = content.portfolio.works.find((w: any) => w.slug === slug);
+    const works = content.portfolio.works as PortfolioWork[];
+    const work = works.find((w) => w.slug === slug);
 
     if (!work) return { title: 'Проект не найден' };
 
@@ -35,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-    return content.portfolio.works.map((work: any) => ({
+    return (content.portfolio.works as PortfolioWork[]).map((work) => ({
         slug: work.slug,
     }));
 }
@@ -43,7 +58,8 @@ export async function generateStaticParams() {
 const CaseDetailPage = async (props: Props) => {
     const params = await props.params;
     const { slug } = params;
-    const work = content.portfolio.works.find((w: any) => w.slug === slug);
+    const works = content.portfolio.works as PortfolioWork[];
+    const work = works.find((w) => w.slug === slug);
 
     if (!work) {
         notFound();
@@ -60,6 +76,12 @@ const CaseDetailPage = async (props: Props) => {
             name: 'PULSE 3D'
         }
     };
+
+    const technology = work.technology || 'FDM Industrial';
+    const equipment = work.equipment || 'Bambu Lab H2S / P1S';
+    const quality = work.quality || 'ОТК Пройден';
+    const warranty = work.warranty || 'Гарантия прочности по NDA';
+    const leadTime = work.leadTime || 'Срок от 48 часов';
 
     // Helper to parse the structured details
     const parseDetail = (text: string) => {
@@ -134,17 +156,17 @@ const CaseDetailPage = async (props: Props) => {
 
                         <div className={styles.specItem}>
                             <span className={styles.specLabel}>ТЕХНОЛОГИЯ</span>
-                            <span className={styles.specValue}>FDM Industrial</span>
+                            <span className={styles.specValue}>{technology}</span>
                         </div>
 
                         <div className={styles.specItem}>
                             <span className={styles.specLabel}>ОБОРУДОВАНИЕ</span>
-                            <span className={styles.specValue}>Bambu Lab H2S / P1S</span>
+                            <span className={styles.specValue}>{equipment}</span>
                         </div>
 
                         <div className={styles.specItem}>
                             <span className={styles.specLabel}>КОНТРОЛЬ КАЧЕСТВА</span>
-                            <span className={styles.specValue}>ОТК Пройден</span>
+                            <span className={styles.specValue}>{quality}</span>
                         </div>
 
                         <div className={styles.ctaWrapper}>
@@ -157,11 +179,11 @@ const CaseDetailPage = async (props: Props) => {
                     <div className={styles.guaranteeBox}>
                         <div className={styles.guaranteeItem}>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-                            <span>Гарантия прочности по NDA</span>
+                            <span>{warranty}</span>
                         </div>
                         <div className={styles.guaranteeItem}>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>Срок от 48 часов</span>
+                            <span>{leadTime}</span>
                         </div>
                     </div>
                 </aside>

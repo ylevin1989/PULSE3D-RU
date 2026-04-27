@@ -5,6 +5,15 @@ import styles from './portfolio.module.css';
 import content from '../../data/content.json';
 import JsonLd from '@/components/seo/JsonLd';
 
+type PortfolioWork = {
+    slug: string;
+    title: string;
+    material: string;
+    image?: string;
+    desc: string;
+    technology?: string;
+};
+
 export const metadata: Metadata = {
     title: 'Портфолио и примеры работ | PULSE 3D',
     description: 'Кейсы и примеры выполненных работ по 3D-печати. Изготовление корпусов, прототипов и серийных деталей из различных пластиков.',
@@ -17,10 +26,12 @@ export const metadata: Metadata = {
 };
 
 const PortfolioPage = () => {
+    const works = content.portfolio.works as PortfolioWork[];
+
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        itemListElement: content.portfolio.works.map((work, index) => ({
+        itemListElement: works.map((work, index) => ({
             '@type': 'ListItem',
             position: index + 1,
             url: `https://pulse3d.ru/portfolio/${work.slug}`,
@@ -40,7 +51,7 @@ const PortfolioPage = () => {
             </section>
 
             <div className={styles.grid}>
-                {content.portfolio.works.map((work) => (
+                {works.map((work) => (
                     <Link key={work.slug} href={`/portfolio/${work.slug}`} className={styles.projectCard}>
                         <div className={styles.imageWrapper}>
                             <Image
@@ -62,8 +73,8 @@ const PortfolioPage = () => {
                                     <span className={styles.statValue}>±0.1 ММ</span>
                                 </div>
                                 <div className={styles.statItem}>
-                                    <span className={styles.statLabel}>ФИНИШ</span>
-                                    <span className={styles.statValue}>MATTE</span>
+                                    <span className={styles.statLabel}>ТЕХНОЛОГИЯ</span>
+                                    <span className={styles.statValue}>{work.technology || 'FDM'}</span>
                                 </div>
                                 <div className={styles.statItem}>
                                     <span className={styles.statLabel}>СТАТУС</span>
