@@ -176,6 +176,82 @@
     color: var(--color-text-secondary);
 }
 
+.capabilitiesSection {
+    padding: 0 0 120px;
+}
+
+.capabilitiesCard {
+    border: 1px solid var(--color-border);
+    background: #fff;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 36px;
+}
+
+.capabilitiesHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.capabilitiesBadge {
+    width: fit-content;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border: 1px solid rgba(15, 23, 42, 0.16);
+    color: var(--color-brand-primary);
+}
+
+.capabilitiesTitle {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: var(--color-brand-primary);
+}
+
+.capabilitiesDesc {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-width: 760px;
+}
+
+.capabilitiesList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 12px;
+}
+
+.capabilitiesList li {
+    padding: 14px 16px;
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-brand-primary);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--color-brand-primary);
+}
+
+.capabilitiesActions {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.capabilitiesNote {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
 .ctaBanner {
     background: var(--color-brand-primary);
     padding: 80px;
@@ -315,6 +391,10 @@
 
     .heroActions {
         justify-content: center;
+    }
+
+    .capabilitiesCard {
+        grid-template-columns: 1fr;
     }
 
     .imageCard {
