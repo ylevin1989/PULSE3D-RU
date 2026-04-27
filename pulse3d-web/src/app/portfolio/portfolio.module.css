@@ -16,6 +16,52 @@
     font-weight: 500;
 }
 
+.filtersSection {
+    margin: 0 0 34px;
+}
+
+.filtersTitle {
+    margin: 0 0 14px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-text-muted);
+}
+
+.filtersRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filterChip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-brand-primary);
+    background: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: all 0.2s ease;
+}
+
+.filterChip:hover {
+    border-color: var(--color-brand-primary);
+    background: #f8fafc;
+}
+
+.filterChipActive {
+    background: var(--color-brand-primary);
+    color: #fff;
+    border-color: var(--color-brand-primary);
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -355,6 +401,15 @@
 
     .introText {
         font-size: 18px;
+    }
+
+    .filtersRow {
+        gap: 8px;
+    }
+
+    .filterChip {
+        font-size: 11px;
+        padding: 9px 12px;
     }
 
     .grid {
